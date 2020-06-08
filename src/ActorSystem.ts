@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Winston from "winston";
-import moment from "moment";
-import {v1} from "uuid";
-import {Maybe, maybe} from "tsmonads";
-import { Subject } from "rxjs";
-
+import { Maybe, maybe } from "tsmonads";
+import { Actor } from "./Actor";
+import { ActorMessage } from "./ActorMessage";
 import { ActorRef } from "./ActorRef";
 import { ActorRefImpl } from "./ActorRefImpl";
-import { ActorMessage } from "./ActorMessage";
-import { Actor } from "./Actor";
+import { Subject } from "rxjs";
+import Winston from "winston";
+import { isString } from "util";
+import moment from "moment";
+import {v1} from "uuid";
 
 export class ActorSystem {
     private actors = new Map<string, Actor>();
@@ -92,6 +92,9 @@ export class ActorSystem {
     }
 
     public getActorRef(name: string): Maybe<ActorRefImpl> {
+        if (name === "actors://system") {
+            return maybe(this.systemActor.ref);
+        }
         return maybe(this.actors.get(name)?.ref);
     }
 
@@ -120,6 +123,19 @@ export class ActorSystem {
 
     public updateChildren(oldRef: ActorRef, newRef: ActorRef): void {
         this.systemActor.updateChildren(oldRef, newRef);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    public async ask(to: ActorRef | string, message: any, timeout = 5000): Promise<void> {
+        if (isString(to)) {
+            return new Promise((resolve) => {
+                this.getActorRef(to).forEach(a => this.systemActor.ref.ask(a, message, (t) => resolve(t), timeout));
+            });
+        } else {
+            return new Promise((resolve) => {
+                this.systemActor.ref.ask(to, message, (t) => resolve(t), timeout);
+            });
+        }
     }
 }
 
