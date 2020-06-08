@@ -41,6 +41,7 @@ module.exports = {
         ],
         "brace-style": ["error"],
         "curly": ["error", "all"],
+        "sort-imports": ["warn"],
         "@typescript-eslint/no-explicit-any": 1,
         "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
     }

@@ -1,11 +1,9 @@
-import { range } from "ramda";
-import { unionize, ofType, UnionOf } from "unionize";
-
-import "./Actor";
+import { UnionOf, ofType, unionize } from "unionize";
 import { Actor } from "./Actor";
 import { ActorRef } from "./ActorRef";
 import { ActorSystem } from "./ActorSystem";
 import Winston from "winston";
+import { range } from "ramda";
 
 const logger = Winston.createLogger({
     format: Winston.format.combine(

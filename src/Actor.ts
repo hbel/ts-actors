@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ActorOptions } from "./ActorOptions";
+import { ActorRef } from "./ActorRef";
+import { ActorRefImpl } from "./ActorRefImpl";
+import { ActorSystem } from "./ActorSystem";
+import { SupervisionStrategy } from "./SupervisionStrategy";
 import Winston from "winston";
 import { isString } from "util";
-
-import { ActorRef } from "./ActorRef";
-import { SupervisionStrategy } from "./SupervisionStrategy";
-import { ActorRefImpl } from "./ActorRefImpl";
-import { ActorOptions } from "./ActorOptions";
-import { ActorSystem } from "./ActorSystem";
  
 export abstract class Actor {
     protected actorRef?: ActorRefImpl;

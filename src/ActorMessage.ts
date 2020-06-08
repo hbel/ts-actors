@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ActorRef } from "./ActorRef";
 export interface ActorMessage {
     from: ActorRef;
