@@ -1,5 +1,7 @@
-import { ActorRef } from "./ActorRef";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Actor } from "./Actor";
+import { ActorRef } from "./ActorRef";
+
 export class ActorRefImpl implements ActorRef {
     constructor(public actor: Actor) {
     }
@@ -31,5 +33,9 @@ export class ActorRefImpl implements ActorRef {
     }
     public get name(): string {
         return this.actor.name;
+    }
+
+    public get isShutdown(): boolean {
+        return this.actor.isShutdown;
     }
 }
