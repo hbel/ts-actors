@@ -9,6 +9,7 @@ module.exports = {
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
     ],
+    "ignorePatterns": ["**/lib/*.js"],
     "globals": {
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"

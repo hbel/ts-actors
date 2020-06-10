@@ -17,17 +17,17 @@ export abstract class Actor {
     public logger?: Winston.Logger;
 
     protected constructor(public readonly name: string, private actorSystem: ActorSystem) {
-        this.preStart();
+        this.beforeStart();
         this.actorRef = new ActorRefImpl(this);
     }
 
-    public preStart (): void { 
+    public beforeStart (): void { 
         return; 
     }
     public afterStart (): void { 
         return; 
     }
-    public preShutdown (): void { 
+    public beforeShutdown (): void { 
         return; 
     }
     public afterShutdown (): void { 
@@ -82,7 +82,7 @@ export abstract class Actor {
         if (this.isShutdown) {
             this.logger && this.logger.warn(this.name, "is already shut down!");
         }
-        this.preShutdown();
+        this.beforeShutdown();
         this.children.filter(c => !c.actor.isShutdown).forEach(child => {
             this.logger && this.logger.debug(this.name, "Shutting down child: ", child.name);
             child.actor.shutdown();

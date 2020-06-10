@@ -12,8 +12,10 @@ import {v1} from "uuid";
 
 export class ActorSystem {
     private actors = new Map<string, Actor>();
-    private systemActor = new SystemActor("system", this);
+    private systemActor = new SystemActor("actors://system", this);
     public inbox = new Subject<ActorMessage>();
+
+    private running = false;
 
     constructor(private logger?: Winston.Logger) {
         this.inbox.subscribe(async (msg: ActorMessage) => {
@@ -66,6 +68,7 @@ export class ActorSystem {
                 }                
             }
         });
+        this.running = true;
     }
 
     public createActor(...params: any[]): ActorRefImpl {
@@ -88,6 +91,7 @@ export class ActorSystem {
         if (strategy) {
             newActor.strategy = strategy;
         }
+        newActor.afterStart();
         return newActor.ref;
     }
 
@@ -137,6 +141,12 @@ export class ActorSystem {
             });
         }
     }
+
+    
+    public get isShutdown() : boolean {
+        return !this.running;
+    }
+    
 }
 
 class SystemActor extends Actor {
