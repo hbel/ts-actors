@@ -73,7 +73,10 @@ export class ActorSystem {
 
     public createActor(...params: any[]): ActorRefImpl {
         const [actorType, options, ...args] = params;
-        const {name, parent, strategy} = options;
+        if (!actorType) {
+            throw new Error("At least an actor type has to be given!");
+        }
+        const {name, parent, strategy} = options ?? {};
         const actorName = (parent ? parent.actor.name + "/" : "actors://system/") + (name || actorType.name + "_" + v1());
         if (this.actors.has(actorName) && !options.overwriteExisting) {
             throw new Error("Actor with that name already exists");
