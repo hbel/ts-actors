@@ -4,7 +4,7 @@ Actors provide a secure, hierarchical way to deal with concurrent processing and
 via messages to pass data. Therefore, no race conditions can occur. Additionally, actors are hierarchically organized which allows *supervising* actors to deal with errors in a reliable way. Especially,
 it should be easy to restart actors that have crashed due to an error without risking a total crash of the program.
 
-If you want to learn more about Actor System, check [https://en.wikipedia.org/wiki/Actor_model|Actor Model in Wikipedia] or the [https://doc.akka.io/docs/akka/current/general/actor-systems.html|Introduction to Actors from the Akka docs].
+If you want to learn more about Actor System, check [Actor Model in Wikipedia](https://en.wikipedia.org/wiki/Actor_model) or the [Introduction to Actors from the Akka docs](https://doc.akka.io/docs/akka/current/general/actor-systems.html).
 
 # Usage
 
@@ -28,8 +28,8 @@ See the libraries test and example folders for additional examples and instructi
 
 # Tips
 
-* [https://github.com/pelotom/unionize|unionize] sum types are the perfect match for dealing with Actor messages.
-* If your project uses [https://github.com/winstonjs/winston|winston] for logging, just call the ActorSystem constructor with your logger. It will not only provide additional
+* [unionize](https://github.com/pelotom/unionize) sum types are the perfect match for dealing with Actor messages.
+* If your project uses [winston](https://github.com/winstonjs/winston) for logging, just call the ActorSystem constructor with your logger. It will not only provide additional
   logging information during runtime, but the logger will also be available in all your actors.
 
 # Limitations
