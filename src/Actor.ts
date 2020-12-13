@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ActorOptions } from "./ActorOptions";
-import { ActorRef } from "./ActorRef";
+import type { ActorOptions } from "./ActorOptions";
+import type { ActorRef } from "./ActorRef";
 import { ActorRefImpl } from "./ActorRefImpl";
-import { ActorSystem } from "./ActorSystem";
-import { SupervisionStrategy } from "./SupervisionStrategy";
-import Winston from "winston";
-import { isString } from "util";
+import type { ActorSystem } from "./ActorSystem";
+import type { SupervisionStrategy } from "./SupervisionStrategy";
+import type Winston from "winston";
  
 export abstract class Actor {
     protected actorRef?: ActorRefImpl;
@@ -69,14 +68,15 @@ export abstract class Actor {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     public async send(to: ActorRef | string, message: any): Promise<void> {
-        if (isString(to)) {
-            this.actorSystem.getActorRef(to).forEach(a => this.ref.send(a, message));
+        if (typeof(to) === "string") {
+            this.actorSystem.getActorRef(to).forEach((a: ActorRef) => this.ref.send(a, message));
         } else {
             this.ref.send(to, message);
         }
     }
 
-    public abstract async receive(from: ActorRef, message: any): Promise<any>;
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    public abstract receive(from: ActorRef, message: any): Promise<any>;
 
     public shutdown(): void {
         if (this.isShutdown) {
@@ -105,9 +105,9 @@ export abstract class Actor {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     public async ask(to: ActorRef | string, message: any, timeout = 5000): Promise<void> {
-        if (isString(to)) {
+        if (typeof(to) === "string") {
             return new Promise((resolve) => {
-                this.actorSystem.getActorRef(to).forEach(a => this.ref.ask(a, message, (t) => resolve(t), timeout));
+                this.actorSystem.getActorRef(to).forEach((a: ActorRef) => this.ref.ask(a, message, (t) => resolve(t), timeout));
             });
         } else {
             return new Promise((resolve) => {

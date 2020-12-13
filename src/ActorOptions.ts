@@ -1,5 +1,5 @@
-import { ActorRefImpl } from "./ActorRefImpl";
-import { SupervisionStrategy } from "./SupervisionStrategy";
+import type { ActorRefImpl } from "./ActorRefImpl";
+import type { SupervisionStrategy } from "./SupervisionStrategy";
 
 export interface ActorOptions {
     name?: string;

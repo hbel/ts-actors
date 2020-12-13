@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Actor } from "./Actor";
-import { ActorRef } from "./ActorRef";
+import type { Actor } from "./Actor";
+import type { ActorRef } from "./ActorRef";
 
 export class ActorRefImpl implements ActorRef {
     constructor(public actor: Actor) {

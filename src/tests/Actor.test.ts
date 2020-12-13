@@ -1,5 +1,5 @@
 import { Actor } from "../Actor";
-import { ActorRef } from "../ActorRef";
+import type { ActorRef } from "../ActorRef";
 import { ActorSystem } from "../ActorSystem";
 
 class TestActor extends Actor {

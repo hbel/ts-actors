@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Maybe, maybe } from "tsmonads";
 import { Actor } from "./Actor";
-import { ActorMessage } from "./ActorMessage";
-import { ActorRef } from "./ActorRef";
-import { ActorRefImpl } from "./ActorRefImpl";
+import type { ActorMessage } from "./ActorMessage";
+import type { ActorRef } from "./ActorRef";
+import type { ActorRefImpl } from "./ActorRefImpl";
 import { Subject } from "rxjs";
-import Winston from "winston";
+import type Winston from "winston";
 import { isString } from "util";
 import moment from "moment";
 import {v1} from "uuid";
@@ -136,7 +136,7 @@ export class ActorSystem {
     public async ask(to: ActorRef | string, message: any, timeout = 5000): Promise<void> {
         if (isString(to)) {
             return new Promise((resolve) => {
-                this.getActorRef(to).forEach(a => this.systemActor.ref.ask(a, message, (t) => resolve(t), timeout));
+                this.getActorRef(to).forEach((a: ActorRefImpl) => this.systemActor.ref.ask(a, message, (t) => resolve(t), timeout));
             });
         } else {
             return new Promise((resolve) => {

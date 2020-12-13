@@ -1,6 +1,6 @@
 import unionize, { UnionOf } from "unionize";
 import { Actor } from "../src/Actor";
-import { ActorRef } from "../src/ActorRef";
+import type { ActorRef } from "../src/ActorRef";
 import { ActorSystem } from "../src/ActorSystem";
 import Winston from "winston";
 import { any } from "ramda";

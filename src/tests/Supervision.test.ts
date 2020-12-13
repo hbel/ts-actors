@@ -1,7 +1,7 @@
 import { Actor } from "../Actor";
-import { ActorRef } from "../ActorRef";
+import type { ActorRef } from "../ActorRef";
 import { ActorSystem } from "../ActorSystem";
-import { SupervisionStrategy } from "../SupervisionStrategy";
+import type { SupervisionStrategy } from "../SupervisionStrategy";
 
 class TestActor extends Actor {
     public state = "";
