@@ -12,7 +12,7 @@ export abstract class Actor {
     public strategy: SupervisionStrategy = "Shutdown";
     public options?: ActorOptions;
     public params: any;    
-	public parent?: ActorRefImpl;
+	public parent!: ActorRefImpl;
     public isShutdown = false;
     public logger?: Winston.Logger;
 
