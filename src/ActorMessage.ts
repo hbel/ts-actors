@@ -4,6 +4,6 @@ export interface ActorMessage {
     from: ActorRef;
     to: ActorRef;
     message: any;
-    ask?: (messege: Promise<any>) => void;
+    ask?: (message: Promise<any>) => void;
     askTimeout: number;
 }

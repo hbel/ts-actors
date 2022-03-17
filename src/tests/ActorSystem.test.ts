@@ -17,9 +17,4 @@ describe("ActorSystem", () => {
         expect(system.getActorRef("actors://system").map(s => s.isShutdown).unsafeLift()).toBeTruthy();
         expect(system.isShutdown).toBeFalsy();
     });
-    it("should throw if createActor is called without parameters", () => {
-        const system = new ActorSystem();
-        expect(() => system.createActor()).toThrow();
-        system.shutdown();
-    });
 });

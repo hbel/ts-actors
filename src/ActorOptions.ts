@@ -5,4 +5,5 @@ export interface ActorOptions {
     name?: string;
     strategy?: SupervisionStrategy;
     parent?: ActorRefImpl;
+	overwriteExisting?: boolean;
 }

@@ -6,8 +6,8 @@ import type { SupervisionStrategy } from "../SupervisionStrategy";
 class TestActor extends Actor {
     public state = "";
 
-    constructor(name: string, system: ActorSystem) {
-        super(name, system);
+    constructor(name: string, actorSystem: ActorSystem) {
+        super(name, actorSystem);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,7 +17,6 @@ class TestActor extends Actor {
                 return this.state;
             case "error":
                 throw(new Error("Foobar"));
-                break;
             default:
                 this.state = message;
         }

@@ -30,7 +30,7 @@ class StorageActor extends Actor {
     }
 
     public async receive(_from: ActorRef, message: Action): Promise<Maybe<number> | void | boolean> {
-        const result = Actions.match<Maybe<number> | void | boolean>(message, {
+        return Actions.match<Maybe<number> | void | boolean>(message, {
             Pop: () => {
                 const [head, ...rest] = this.store;
                 this.store = rest;
@@ -43,7 +43,6 @@ class StorageActor extends Actor {
                 this.store.push(x);
             },
         });
-        return result;
     }
 }
 

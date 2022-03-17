@@ -12,6 +12,7 @@ export abstract class Actor {
     public strategy: SupervisionStrategy = "Shutdown";
     public options?: ActorOptions;
     public params: any;    
+	public parent?: ActorRefImpl;
     public isShutdown = false;
     public logger?: Winston.Logger;
 
@@ -39,7 +40,7 @@ export abstract class Actor {
                 throw new Error("Actor reference got lost. This is a critical error");
             }
             this.children.forEach(c => c.actor.restart());
-            const actorRef = this.system.createActor(this.constructor, {...this.options, overwriteExisting: true}, this.params);
+            const actorRef = this.system.createActor(this.constructor as any, {...this.options, overwriteExisting: true}, this.params);
             actorRef.actor.actorRef = this.actorRef;                
             actorRef.actor.children = [...this.children];
             this.system.updateChildren(this.actorRef, actorRef);

@@ -5,8 +5,8 @@ import { ActorSystem } from "../ActorSystem";
 class TestActor extends Actor {
     public myStore = "";
 
-    constructor(name: string, system: ActorSystem) {
-        super(name, system);
+    constructor(name: string, actorSystem: ActorSystem) {
+        super(name, actorSystem);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -24,6 +24,9 @@ class TestActor extends Actor {
                 return wait;
             case "doSomething":
                 this.myStore = message.text;
+                break;
+            case "kill":
+                this.shutdown();
                 break;
         }
     }
@@ -74,8 +77,10 @@ describe("Actor", () => {
         try {
             await system.ask(actor, {command: "timeout"}, 10);
         } catch (e) {
-            expect(e.startsWith("Ask from actors://system timed out")).toBeTruthy();
-            done();
+            if (typeof(e) === "string") {
+                expect(e.startsWith("Ask from actors://system timed out")).toBeTruthy();
+                done();
+            }
         }
     });
     it("should set state on afterStart", () => {

@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { Actor } from "./Actor";
 import type { ActorRef } from "./ActorRef";
 
 export class ActorRefImpl implements ActorRef {
     constructor(public actor: Actor) {
     }
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+
     public async send(to: ActorRef, message: any): Promise<void> {
-        // console.log(`Sending message from actor ${this.actor.name} to ${to.actor.name}`);
         const inbox = (to as ActorRefImpl).actor.system.inbox;
         if (inbox.isStopped) {
             throw new Error("Actor system has already been shut down!");
@@ -18,9 +19,8 @@ export class ActorRefImpl implements ActorRef {
             }
         }, 0);
     }
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+
     public async ask(to: ActorRef, message: any, ask: (message: Promise<any>) => void, askTimeout: number): Promise<void> {
-        // console.log(`Sending message from actor ${this.actor.name} to ${to.actor.name}`);
         const inbox = (to as ActorRefImpl).actor.system.inbox;
         if (inbox.isStopped) {
             throw new Error("Actor system has already been shut down!");
@@ -31,6 +31,7 @@ export class ActorRefImpl implements ActorRef {
             }
         }, 0);
     }
+
     public get name(): string {
         return this.actor.name;
     }

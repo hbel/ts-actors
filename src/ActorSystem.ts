@@ -1,15 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Maybe, maybe } from "tsmonads";
 import { Actor } from "./Actor";
 import type { ActorMessage } from "./ActorMessage";
+import type { ActorOptions } from "./ActorOptions";
 import type { ActorRef } from "./ActorRef";
 import type { ActorRefImpl } from "./ActorRefImpl";
 import { Subject } from "rxjs";
 import type Winston from "winston";
-import { isString } from "util";
 import moment from "moment";
 import {v1} from "uuid";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ActorClass<T> = new (name: string, system: ActorSystem, ...args: any[]) => T;
 export class ActorSystem {
     private actors = new Map<string, Actor>();
     private systemActor = new SystemActor("actors://system", this);
@@ -46,7 +47,7 @@ export class ActorSystem {
                     ts = setTimeout(() => {
                         this.logger && this.logger.debug(`Ask from ${msg.from.name} timed out at ${moment().toISOString()}`);
                         timedOut = true;
-                        ask(new Promise((_, reject) => reject(`Ask from ${msg.from.name} timed out at ${moment().toISOString()}`)));
+                        ask(Promise.reject(`Ask from ${msg.from.name} timed out at ${moment().toISOString()}`));
                     }, msg.askTimeout);
                 }
                 const result = await target.receive(msg.from, msg.message);
@@ -71,8 +72,8 @@ export class ActorSystem {
         this.running = true;
     }
 
-    public createActor(...params: any[]): ActorRefImpl {
-        const [actorType, options, ...args] = params;
+    public createActor<T extends Actor>(actorType: ActorClass<T>, options: ActorOptions, ...params: unknown[]): ActorRefImpl {
+        const [...args] = params;
         if (!actorType) {
             throw new Error("At least an actor type has to be given!");
         }
@@ -85,6 +86,7 @@ export class ActorSystem {
         newActor.options = options;
         newActor.params = args;
         newActor.logger = this.logger;
+        newActor.parent = parent ?? this.systemActor.ref;
         this.actors.set(newActor.name, newActor);
         if (parent) {
             parent.actor.appendChild(newActor);
@@ -106,7 +108,7 @@ export class ActorSystem {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public async send(to: ActorRef, message: any) {
+    public async send(to: ActorRef, message: unknown) {
         this.inbox.next({from: this.systemActor.ref, to, message, askTimeout: 0});
     }
 
@@ -133,8 +135,8 @@ export class ActorSystem {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public async ask(to: ActorRef | string, message: any, timeout = 5000): Promise<void> {
-        if (isString(to)) {
+    public async ask(to: ActorRef | string, message: unknown, timeout = 5000): Promise<void> {
+        if (typeof(to) === "string") {
             return new Promise((resolve) => {
                 this.getActorRef(to).forEach((a: ActorRefImpl) => this.systemActor.ref.ask(a, message, (t) => resolve(t), timeout));
             });
@@ -157,7 +159,7 @@ class SystemActor extends Actor {
         super(name, actorSystem);
     }
 
-    public async receive(from: ActorRef, message: any) {
+    public async receive(from: ActorRef, message: unknown) {
         this.logger && this.logger.info(`System (from ${from.name}): `, message);
     }
 }
