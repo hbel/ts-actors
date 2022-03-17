@@ -89,7 +89,13 @@ export abstract class Actor {
             child.actor.shutdown();
         });
         this.isShutdown = true;
+        this.parent?.actor?.removeChild(this.ref);
+        this.actorSystem.remove(this.ref);
         this.afterShutdown();
+    }
+
+    public removeChild(child: ActorRef): void {
+        this.children = this.children.filter(c => c != child);
     }
 
     public updateChildren(oldRef: ActorRef, newRef: ActorRef): void {
