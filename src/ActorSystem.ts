@@ -11,8 +11,10 @@ import {v1} from "uuid";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ActorClass<T> = new (name: string, system: ActorSystem, ...args: any[]) => T;
+
+type AnyActor = Actor<any, any>;
 export class ActorSystem {
-    private actors = new Map<string, Actor>();
+    private actors = new Map<string, AnyActor>();
     private systemActor = new SystemActor("actors://system", this);
     public inbox = new Subject<ActorMessage>();
 
@@ -72,7 +74,7 @@ export class ActorSystem {
         this.running = true;
     }
 
-    public createActor<T extends Actor>(actorType: ActorClass<T>, options: ActorOptions, ...params: unknown[]): ActorRefImpl {
+    public createActor<X, Y, T extends Actor<X, Y> = Actor<X, Y>>(actorType: ActorClass<T>, options: ActorOptions, ...params: unknown[]): ActorRefImpl {
         const [...args] = params;
         if (!actorType) {
             throw new Error("At least an actor type has to be given!");
@@ -82,7 +84,7 @@ export class ActorSystem {
         if (this.actors.has(actorName) && !options.overwriteExisting) {
             throw new Error("Actor with that name already exists");
         }
-        const newActor: Actor = new actorType(actorName, this, ...args);
+        const newActor: Actor<X, Y> = new actorType(actorName, this, ...args) as unknown as Actor<X, Y>;
         newActor.options = options;
         newActor.params = args;
         newActor.logger = this.logger;
@@ -154,7 +156,7 @@ export class ActorSystem {
     
 }
 
-class SystemActor extends Actor {
+class SystemActor extends Actor<unknown, void> {
     constructor(name: string, actorSystem: ActorSystem) {
         super(name, actorSystem);
     }

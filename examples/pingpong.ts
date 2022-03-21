@@ -21,7 +21,7 @@ const Actions = unionize({
 
 type Action = UnionOf<typeof Actions>;
 
-class PingPongActor extends Actor {
+class PingPongActor extends Actor<Action, void> {
     private counter = 0;
 
     constructor(name: string, actorSystem: ActorSystem, other: ActorRef) {

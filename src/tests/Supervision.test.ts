@@ -3,7 +3,7 @@ import type { ActorRef } from "../ActorRef";
 import { ActorSystem } from "../ActorSystem";
 import type { SupervisionStrategy } from "../SupervisionStrategy";
 
-class TestActor extends Actor {
+class TestActor extends Actor<any, void | string> {
     public state = "";
 
     constructor(name: string, actorSystem: ActorSystem) {

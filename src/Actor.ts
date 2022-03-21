@@ -6,7 +6,7 @@ import type { ActorSystem } from "./ActorSystem";
 import type { SupervisionStrategy } from "./SupervisionStrategy";
 import type Winston from "winston";
  
-export abstract class Actor {
+export abstract class Actor<T, U> {
     protected actorRef?: ActorRefImpl;
     public children: ActorRefImpl[] = [];
     public strategy: SupervisionStrategy = "Shutdown";
@@ -40,7 +40,7 @@ export abstract class Actor {
                 throw new Error("Actor reference got lost. This is a critical error");
             }
             this.children.forEach(c => c.actor.restart());
-            const actorRef = this.system.createActor(this.constructor as any, {...this.options, overwriteExisting: true}, this.params);
+            const actorRef = this.system.createActor<T, U>(this.constructor as any, {...this.options, overwriteExisting: true}, this.params);
             actorRef.actor.actorRef = this.actorRef;                
             actorRef.actor.children = [...this.children];
             this.system.updateChildren(this.actorRef, actorRef);
@@ -52,7 +52,7 @@ export abstract class Actor {
         }
     }
 
-    public appendChild(actor: Actor): void {
+    public appendChild(actor: Actor<unknown, unknown>): void {
         this.children.push(actor.ref);
     }
 
@@ -68,7 +68,7 @@ export abstract class Actor {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public async send(to: ActorRef | string, message: any): Promise<void> {
+    public async send<S>(to: ActorRef | string, message: S): Promise<void> {
         if (typeof(to) === "string") {
             this.actorSystem.getActorRef(to).forEach((a: ActorRef) => this.ref.send(a, message));
         } else {
@@ -77,7 +77,7 @@ export abstract class Actor {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public abstract receive(from: ActorRef, message: any): Promise<any>;
+    public abstract receive(from: ActorRef, message: T): Promise<U>;
 
     public shutdown(): void {
         if (this.isShutdown) {
@@ -111,7 +111,7 @@ export abstract class Actor {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public async ask(to: ActorRef | string, message: any, timeout = 5000): Promise<void> {
+    public async ask<S>(to: ActorRef | string, message: any, timeout = 5000): Promise<S> {
         if (typeof(to) === "string") {
             return new Promise((resolve) => {
                 this.actorSystem.getActorRef(to).forEach((a: ActorRef) => this.ref.ask(a, message, (t) => resolve(t), timeout));

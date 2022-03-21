@@ -1,11 +1,13 @@
 {
   "name": "ts-actors",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Akka-style actors for typescript",
   "author": "Hendrik Belitz <hendrik@innovation-through-understanding.de>",
   "main": "lib/index.js",
   "license": "MIT",
-  "files": ["lib/"],
+  "files": [
+    "lib/"
+  ],
   "dependencies": {
     "immutable": "^4.0.0-rc.12",
     "moment": "^2.26.0",
@@ -25,6 +27,7 @@
     "eslint": "^7.1.0",
     "jest": "^26.0.1",
     "ts-jest": "^26.1.0",
+    "ts-node": "^10.7.0",
     "typescript": "^4.1.3",
     "unionize": "^3.1.0"
   },

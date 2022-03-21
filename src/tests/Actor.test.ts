@@ -2,7 +2,7 @@ import { Actor } from "../Actor";
 import type { ActorRef } from "../ActorRef";
 import { ActorSystem } from "../ActorSystem";
 
-class TestActor extends Actor {
+class TestActor extends Actor<any, void|number|string> {
     public myStore = "";
 
     constructor(name: string, actorSystem: ActorSystem) {

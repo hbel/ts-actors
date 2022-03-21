@@ -5,7 +5,7 @@ import type { Actor } from "./Actor";
 import type { ActorRef } from "./ActorRef";
 
 export class ActorRefImpl implements ActorRef {
-    constructor(public actor: Actor) {
+    constructor(public actor: Actor<unknown, unknown>) {
     }
 
     public async send(to: ActorRef, message: any): Promise<void> {

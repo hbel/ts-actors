@@ -22,7 +22,7 @@ const Actions = unionize({
 
 type Action = UnionOf<typeof Actions>;
 
-class StorageActor extends Actor {
+class StorageActor extends Actor<Action, Maybe<number> | void | boolean> {
     private store: number[] = [];
 
     constructor(name: string, actorSystem: ActorSystem) {
