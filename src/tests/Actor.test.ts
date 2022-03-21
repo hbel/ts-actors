@@ -2,6 +2,7 @@ import { Actor } from "../Actor";
 import type { ActorRef } from "../ActorRef";
 import { ActorSystem } from "../ActorSystem";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class TestActor extends Actor<any, void|number|string> {
     public myStore = "";
 

@@ -3,6 +3,7 @@ import type { ActorRef } from "../ActorRef";
 import { ActorSystem } from "../ActorSystem";
 import type { SupervisionStrategy } from "../SupervisionStrategy";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 class TestActor extends Actor<any, void | string> {
     public state = "";
 

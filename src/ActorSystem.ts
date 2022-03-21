@@ -12,6 +12,7 @@ import {v1} from "uuid";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ActorClass<T> = new (name: string, system: ActorSystem, ...args: any[]) => T;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyActor = Actor<any, any>;
 export class ActorSystem {
     private actors = new Map<string, AnyActor>();
@@ -137,7 +138,7 @@ export class ActorSystem {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public async ask(to: ActorRef | string, message: unknown, timeout = 5000): Promise<void> {
+    public async ask<S>(to: ActorRef | string, message: unknown, timeout = 5000): Promise<S> {
         if (typeof(to) === "string") {
             return new Promise((resolve) => {
                 this.getActorRef(to).forEach((a: ActorRefImpl) => this.systemActor.ref.ask(a, message, (t) => resolve(t), timeout));
