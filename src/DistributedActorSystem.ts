@@ -24,7 +24,7 @@ export class DistributedActorSystem extends ActorSystem {
 
     constructor(options: DistributedActorSystemOptions) {
         super(options);
-
+        this.running = false;
         const port = options.natsPort;
         const token = options.natsSecret;
         const server = options.natsServer ?? "localhost";
@@ -38,6 +38,7 @@ export class DistributedActorSystem extends ActorSystem {
             this.natsConnection = client;
             this.logger.debug("Connection to nats server established");
             this.subscribeToBus();
+            this.running = true;
         }).catch(() => {
             this.logger.error("Nats server connection could not be created");
         });
@@ -96,6 +97,10 @@ export class DistributedActorSystem extends ActorSystem {
     }
 
     private onData(message: Msg): void {
-        this.inbox.next(JSONCodec<ActorMessage<unknown, unknown>>().decode(message.data));
+        const msg = JSONCodec<ActorMessage<unknown, unknown>>().decode(message.data);
+        if (msg.askTimeout) {
+            msg.ask = t => message.respond(JSONCodec().encode(t));
+        }
+        this.inbox.next(msg);
     }
 }
