@@ -53,10 +53,10 @@ class Pong extends Actor<string, void> {
 	}
 }
 
-const systemA = new DistributedActorSystem({systemName: "SA", natsPort: "4347", natsSecret: "TyK/7p4FIpokSj01+Xo0sA=="});
+const systemA = new DistributedActorSystem({systemName: "SA", natsPort: "9999"});
 const ping = systemA.createActor(Ping, { name: "PING" });
 
-const systemB = new DistributedActorSystem({systemName: "SB", natsPort: "4347", natsSecret: "TyK/7p4FIpokSj01+Xo0sA=="});
+const systemB = new DistributedActorSystem({systemName: "SB", natsPort: "9999"});
 systemB.createActor(Pong, { name: "PONG" });
 
 systemA.started().then(() => systemA.send(ping, "PING"));
