@@ -9,6 +9,7 @@ class TestActor extends Actor<any, void | string> {
 
     constructor(name: string, actorSystem: ActorSystem) {
         super(name, actorSystem);
+        this.shutdown = this.shutdown.bind(this);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

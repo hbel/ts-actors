@@ -1,5 +1,6 @@
 import { Actor } from "../Actor";
 import type { ActorRef } from "../ActorRef";
+import { ActorRefImpl } from "../ActorRefImpl";
 import { ActorSystem } from "../ActorSystem";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,11 +33,11 @@ class TestActor extends Actor<any, void|number|string> {
         }
     }
 
-    public afterStart() {
+    public override afterStart() {
         this.myStore = "started";
     }
 
-    public afterShutdown() {
+    public override afterShutdown() {
         this.myStore = "shut down";
     }
 }
@@ -55,7 +56,7 @@ describe("Actor", () => {
     it("should be started", () => {
         const actor = system.createActor(TestActor, {name: "testActor"});
         expect(actor.name).toBe("actors://system/testActor");
-        expect(system.getActorRef("actors://system/testActor").hasValue).toBeTruthy();
+        expect(system.getActorRef("actors://system/testActor") instanceof ActorRefImpl).toBeTruthy();
         expect(actor.isShutdown).toBeFalsy();
     });
     it("should respond to a message", (done) => {
@@ -73,16 +74,10 @@ describe("Actor", () => {
         const num = await system.ask(actor, {command: "number"});
         expect(num).toBe(1);
     });
-    it("should timeout", async (done) => {
+    it("should timeout", async () => {
         const actor = system.createActor(TestActor, {name: "testActor"});
-        try {
-            await system.ask(actor, {command: "timeout"}, 10);
-        } catch (e) {
-            if (typeof(e) === "string") {
-                expect(e.startsWith("Ask from actors://system timed out")).toBeTruthy();
-                done();
-            }
-        }
+        const askPromise = system.ask(actor, {command: "timeout"}, 10);
+        expect(askPromise).rejects.toBeTruthy();
     });
     it("should set state on afterStart", () => {
         const actor = system.createActor(TestActor, {name: "testActor"});

@@ -3,20 +3,19 @@ import type { ActorOptions } from "./ActorOptions";
 import type { ActorRef } from "./ActorRef";
 import { ActorRefImpl } from "./ActorRefImpl";
 import type { ActorSystem } from "./ActorSystem";
+import type { Logger } from "./Logger";
 import type { SupervisionStrategy } from "./SupervisionStrategy";
-import type Winston from "winston";
  
 export abstract class Actor<T, U> {
     protected actorRef?: ActorRefImpl;
     public children: ActorRefImpl[] = [];
     public strategy: SupervisionStrategy = "Shutdown";
     public options?: ActorOptions;
-    public params: any;    
-	public parent!: ActorRefImpl;
+    public parent!: ActorRefImpl;
     public isShutdown = false;
-    public logger?: Winston.Logger;
+    public logger!: Logger;
 
-    protected constructor(public readonly name: string, private actorSystem: ActorSystem) {
+    protected constructor(public readonly name: string, private actorSystem: ActorSystem, private params?: any[]) {
         this.beforeStart();
         this.actorRef = new ActorRefImpl(this);
     }
@@ -47,7 +46,7 @@ export abstract class Actor<T, U> {
             this.actorRef.actor = actorRef.actor;
             this.children = [];
         } catch (e) {
-            this.logger && this.logger.error(e);
+            this.logger.error(e);
             this.shutdown();
         }
     }
@@ -67,25 +66,27 @@ export abstract class Actor<T, U> {
         return this.actorSystem;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public async send<S>(to: ActorRef | string, message: S): Promise<void> {
-        if (typeof(to) === "string") {
-            this.actorSystem.getActorRef(to).forEach((a: ActorRef) => this.ref.send(a, message));
-        } else {
-            this.ref.send(to, message);
+    public send<S>(to: ActorRef | string, message: S): void {
+        const inbox = this.system.inbox;
+        if (inbox.isStopped) {
+            throw new Error("Actor system has already been shut down!");
         }
+        setTimeout(() => {
+            if (!inbox.isStopped) {
+                inbox.next({ from: this.name, to: typeof(to) === "string" ? to : to.name, message, askTimeout: 0 });
+            }
+        }, 0);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     public abstract receive(from: ActorRef, message: T): Promise<U>;
 
     public shutdown(): void {
         if (this.isShutdown) {
-            this.logger && this.logger.warn(this.name, "is already shut down!");
+            this.logger.warn(`${this.name} is already shut down!`);
         }
         this.beforeShutdown();
         this.children.filter(c => !c.actor.isShutdown).forEach(child => {
-            this.logger && this.logger.debug(this.name, "Shutting down child: ", child.name);
+            this.logger.debug(`${this.name} - Shutting down child: ${child.name}`);
             child.actor.shutdown();
         });
         this.isShutdown = true;
@@ -110,17 +111,20 @@ export abstract class Actor<T, U> {
         });
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public async ask<S>(to: ActorRef | string, message: any, timeout = 5000): Promise<S> {
-        if (typeof(to) === "string") {
-            return new Promise((resolve) => {
-                this.actorSystem.getActorRef(to).forEach((a: ActorRef) => this.ref.ask(a, message, (t) => resolve(t), timeout));
-            });
-        } else {
-            return new Promise((resolve) => {
-                this.ref.ask(to, message, (t) => resolve(t), timeout);
-            });
-        }
+    public async ask<S,V>(to: ActorRef | string, message: S, timeout = 5000): Promise<V> {
+        const actorName = typeof(to) === "string" ? to : to.name;
+        return new Promise((resolve) => {
+            const inbox = this.system.inbox;
+            if (inbox.isStopped) {
+                throw new Error("Actor system has already been shut down!");
+            }
+            setTimeout(() => {
+                if (!inbox.isStopped) {
+                    inbox.next({ from: this.name, to: actorName, message, ask: (t: unknown) => resolve(t as V), askTimeout: timeout });
+                }
+            }, 0);
+        });
+	
     }
 }
 

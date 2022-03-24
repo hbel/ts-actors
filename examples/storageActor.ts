@@ -1,9 +1,10 @@
-import { Maybe, maybe } from "tsmonads";
-import unionize, { UnionOf, ofType } from "unionize";
+import type { UnionOf} from "unionize";
+import unionize, { ofType } from "unionize";
+import Winston from "winston";
+
 import { Actor } from "../src/Actor";
 import type { ActorRef } from "../src/ActorRef";
 import { ActorSystem } from "../src/ActorSystem";
-import Winston from "winston";
 
 const logger = Winston.createLogger({
     format: Winston.format.combine(
@@ -22,19 +23,19 @@ const Actions = unionize({
 
 type Action = UnionOf<typeof Actions>;
 
-class StorageActor extends Actor<Action, Maybe<number> | void | boolean> {
+class StorageActor extends Actor<Action, number | void | boolean> {
     private store: number[] = [];
 
     constructor(name: string, actorSystem: ActorSystem) {
         super(name, actorSystem);
     }
 
-    public async receive(_from: ActorRef, message: Action): Promise<Maybe<number> | void | boolean> {
-        return Actions.match<Maybe<number> | void | boolean>(message, {
+    public async receive(_from: ActorRef, message: Action): Promise<number | void | boolean> {
+        return Actions.match<number | void | boolean>(message, {
             Pop: () => {
                 const [head, ...rest] = this.store;
                 this.store = rest;
-                return maybe(head);
+                return head;
             },
             Empty: () => {
                 return this.store.length === 0;
@@ -59,7 +60,7 @@ const getVals = async () => {
     system.shutdown();
 };
 
-const system = new ActorSystem(logger);
+const system = new ActorSystem({logger});
 const storage = system.createActor(StorageActor, {name: "storage"});
 system.send(storage, Actions.Append(10));
 system.send(storage, Actions.Append(20));

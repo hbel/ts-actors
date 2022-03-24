@@ -1,6 +1,6 @@
 {
   "name": "ts-actors",
-  "version": "0.2.8",
+  "version": "1.0.0",
   "description": "Akka-style actors for typescript",
   "author": "Hendrik Belitz <hendrik@innovation-through-understanding.de>",
   "main": "lib/index.js",
@@ -9,13 +9,9 @@
     "lib/"
   ],
   "dependencies": {
-    "immutable": "^4.0.0-rc.12",
-    "moment": "^2.26.0",
     "ramda": "^0.27.0",
     "rxjs": "^6.5.5",
-    "tsmonads": "^2.1.0",
-    "uuid": "^8.1.0",
-    "winston": "^3.2.1"
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
@@ -24,15 +20,21 @@
     "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
-    "eslint": "^7.1.0",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "^26.0.1",
+    "nats": "^2.6.1",
+    "prettier": "^2.6.0",
     "ts-jest": "^26.1.0",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.2",
-    "unionize": "^3.1.0"
+    "unionize": "^3.1.0",
+    "winston": "^3.2.1"
   },
   "scripts": {
     "build": "eslint . --ext .ts && tsc --build tsconfig.json",
+    "lint-fix": "eslint . --ext .ts --fix",
     "test": "jest --watch"
   }
 }

@@ -1,9 +1,12 @@
-import unionize, { UnionOf } from "unionize";
+import { any } from "ramda";
+import type { UnionOf } from "unionize";
+import unionize from "unionize";
+import Winston from "winston";
+
 import { Actor } from "../src/Actor";
 import type { ActorRef } from "../src/ActorRef";
+import type { ActorRefImpl } from "../src/ActorRefImpl";
 import { ActorSystem } from "../src/ActorSystem";
-import Winston from "winston";
-import { any } from "ramda";
 
 const logger = Winston.createLogger({
     format: Winston.format.combine(
@@ -51,12 +54,12 @@ class PingPongActor extends Actor<Action, void> {
     }
 }
 
-const system = new ActorSystem(logger);
+const system = new ActorSystem({logger});
 system.createActor(PingPongActor, {name: "one"});
-system.createActor(PingPongActor, {name: "two"}, system.getActorRef("actors://system/one").orUndefined());
+system.createActor(PingPongActor, {name: "two"}, system.getActorRef("actors://system/one"));
 
 const shutdownHook = () => {
-    const children = system.childrenOf(system.getActorRef("actors://system").orUndefined());
+    const children = system.childrenOf(system.getActorRef("actors://system") as ActorRefImpl);
     if (any(c => c.isShutdown, children)) {
         system.shutdown();
     } else {
