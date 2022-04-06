@@ -83,7 +83,6 @@ export class ActorSystem {
 	    newActor.options = options;
 	    newActor.logger = this.logger;
 	    newActor.parent = parent ?? this.systemActor.ref;
-	    newActor.beforeStart();
 	    this.actors.set(newActor.name, newActor);
 	    if (parent) {
 	        parent.actor.appendChild(newActor);
@@ -235,7 +234,7 @@ export class ActorSystem {
 	    } catch (e) {
 	        const target = this.actors.get(msg.to);
 	        if (target) {
-	            this.logger.warn(`Unhandled expection in ${target.name}, applying strategy ${target.strategy}`);
+	            this.logger.warn(`Unhandled exception in ${target.name}, applying strategy ${target.strategy}`);
 	            switch (target.strategy) {
 	                case "Restart": target.restart(); break;
 	                case "Shutdown": target.shutdown(); break;
