@@ -63,6 +63,7 @@ describe("Supervisioned actor", () => {
         const actor = system.createActor(TestActor, {name: "testActor", strategy: "Restart" as SupervisionStrategy});
         system.send(actor, "foobar");
         system.send(actor, "error");
+        await new Promise((resolver) => setTimeout(resolver, 500));
         const foobar = await system.ask(actor, "getState");
         expect(foobar).toBe("");
     });    
@@ -102,6 +103,7 @@ describe("For children of supervisioned actors", () => {
         const actor = system.createActor(TestActor, {name: "child", parent});
         system.send(actor, "foobar");
         system.send(parent, "error");
+        await new Promise((resolver) => setTimeout(resolver, 500));
         const foobar = await system.ask(actor, "getState");
         expect(foobar).toBe("");
     });

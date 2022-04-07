@@ -6,7 +6,7 @@ import { Actor } from "./Actor";
 import type { ActorMessage } from "./ActorMessage";
 import type { ActorOptions } from "./ActorOptions";
 import type { ActorRef } from "./ActorRef";
-import { ActorRefImpl } from "./ActorRefImpl";
+import type { ActorRefImpl } from "./ActorRefImpl";
 import { ConsoleLogger } from "./ConsoleLogger";
 import type { Logger } from "./Logger";
 
@@ -161,20 +161,9 @@ export class ActorSystem {
 	 * @returns result from the target actor
 	 */
 	public async ask<S, V>(to: ActorRef | string, message: V, timeout = 5000): Promise<S> {
-	    if (typeof(to) === "string") {
-	        const actorOrError = this.getActorRef(to);
-	        if (actorOrError instanceof ActorRefImpl) {
-	            return new Promise((resolve) => {
-	                this.systemActor.ref.ask(actorOrError, message, (t: S) => resolve(t), timeout);
-	            });
-	        } else {
-	            return Promise.reject(actorOrError);
-	        }
-	    } else {
-	        return new Promise((resolve) => {
-	            this.systemActor.ref.ask(to, message, (t: S) => resolve(t), timeout);
-	        });
-	    }
+	    return new Promise((resolve) => {
+	        this.inbox.next({from: this.systemActor.ref.name, to: typeof(to) === "string" ? to : to.name, message, askTimeout: timeout, ask: (t: unknown) => resolve(t as S)});
+	    });
 	}
     
 	/**
