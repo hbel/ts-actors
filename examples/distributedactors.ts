@@ -10,12 +10,12 @@ class Ping extends Actor<string, void|string> {
 	    super(name, system);
 	}
 
-	async receive(_from: ActorRef, message: string): Promise<void|string> {
+	async receive(from: ActorRef, message: string): Promise<void|string> {
 	    switch(message) {
 	        case "PING": {
 	            console.log("PING", this.counter);
 	            this.counter += 1;
-	            this.send("actors://SB/PONG", "PONG");
+	            this.send(from.name.includes("SA") ? "actors://SB/PONG" : from.name, "PONG");
 	            break;
 	        }
 	        case "SHUTDOWN": {
@@ -36,7 +36,8 @@ class Pong extends Actor<string, void> {
 	    super(name, system);
 	}
 
-	async receive(_from: ActorRef, message: string): Promise<void> {
+	async receive(from: ActorRef, message: string): Promise<void> {
+	    console.log("FROM", from.name, "TO", this.name);
 	    switch(message) {
 	        case "ASK": {
 	            const result = await this.ask<string, string>("actors://SA/PING", "ASK");
@@ -47,12 +48,12 @@ class Pong extends Actor<string, void> {
 	            console.log("PONG", this.counter);
 	            this.counter += 1;
 	            if (this.counter > 10) {
-	                this.send("actors://SA/PING", "SHUTDOWN");
+	                this.send(from.name, "SHUTDOWN");
 	                setTimeout(() => this.send("actors://SB/PONG", "SHUTDOWN"), 250);
 	                return;
 	            }
 		
-	            this.send("actors://SA/PING", "PING");
+	            this.send(from.name, "PING");
 	            break;
 	        }
 	        case "SHUTDOWN": {

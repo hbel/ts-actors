@@ -1,3 +1,4 @@
+import { clone } from "ramda";
 import type { Subscription } from "rxjs";
 import { Subject } from "rxjs";
 import {v1} from "uuid";
@@ -209,8 +210,12 @@ export class ActorSystem {
 	                ask(Promise.reject(`Ask from ${msg.from} timed out at ${Date.now().toLocaleString()}`));
 	            }, msg.askTimeout);
 	        }
-			
-	        const actor = this.actors.get(msg.from)?.ref ?? this.systemActor.ref;
+	        // This is a fix for the fact that distributed actors need to set the name to the original caller, not the local one
+	        const targetRef = this.actors.get(msg.from)?.ref;
+	        const actor = targetRef ?? clone(this.systemActor.ref);
+	        if (!targetRef) {
+	            (actor as any).name = msg.from;
+	        }
 	        const result = await target?.receive(actor, msg.message);
 	        if (msg.ask) {
 	            if (ts) {
