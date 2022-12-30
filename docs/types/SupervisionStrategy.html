@@ -15,9 +15,14 @@
 <li><a href="../modules.html">ts-actors</a></li>
 <li><a href="SupervisionStrategy.html">SupervisionStrategy</a></li></ul>
 <h1>Type alias SupervisionStrategy</h1></div>
-<div class="tsd-signature">Supervision<wbr/>Strategy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;Restart&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Resume&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Shutdown&quot;</span></div><aside class="tsd-sources">
+<div class="tsd-signature">Supervision<wbr/>Strategy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;Restart&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Resume&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;Shutdown&quot;</span></div>
+<div class="tsd-comment tsd-typography"><p>What should happen if an actor runs into an unrecoverable error.
+Restart - Restart the existing actor and all of its children
+Resume - Just continue working
+Shutdown - Shut down the actor and all of its children</p>
+</div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/SupervisionStrategy.ts#L1">src/SupervisionStrategy.ts:1</a></li></ul></aside></div>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/SupervisionStrategy.ts#L7">src/SupervisionStrategy.ts:7</a></li></ul></aside></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -47,6 +52,8 @@
 <li class="tsd-kind-interface"><a href="../interfaces/ActorMessage.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Actor<wbr/>Message</a></li>
 <li class="tsd-kind-interface"><a href="../interfaces/ActorOptions.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Actor<wbr/>Options</a></li>
 <li class="tsd-kind-interface"><a href="../interfaces/ActorRef.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Actor<wbr/>Ref</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/ActorSystemOptions.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Actor<wbr/>System<wbr/>Options</a></li>
+<li class="tsd-kind-interface"><a href="../interfaces/DistributedActorSystemOptions.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Distributed<wbr/>Actor<wbr/>System<wbr/>Options</a></li>
 <li class="current tsd-kind-type-alias"><a href="SupervisionStrategy.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4194304-path"></rect><path d="M11.31 16V8.224H8.91V7.24H14.79V8.224H12.39V16H11.31Z" fill="var(--color-text)" id="icon-4194304-text"></path></svg>Supervision<wbr/>Strategy</a></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>

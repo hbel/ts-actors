@@ -11,15 +11,22 @@ import type { ActorRefImpl } from "./ActorRefImpl";
 import { ConsoleLogger } from "./ConsoleLogger";
 import type { Logger } from "./Logger";
 
+/** Actor constructor type */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ActorClass<T> = new (name: string, system: ActorSystem, ...args: any[]) => T;
 
+/** An arbitrary actor */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyActor = Actor<any, any>;
 
+/**
+ * Optional options for the actor system, e.g. it's name and the winston logger to use.
+ */
 export interface ActorSystemOptions {
-	logger?: Logger;
-	systemName?: string;
+	/** optionally provided logger. System will log to console otherwise */
+	logger?: Logger; 
+	/** optional system name. Defaults to "system" */
+	systemName?: string; 
 }
 
 /**
@@ -39,8 +46,6 @@ export class ActorSystem {
 
 	/**
 	 * @param options Option object (can be omitted)
-	 * @param logger optionally provided logger. System will log to console otherwise
-	 * @param systemName optional system name. Defaults to "system"
 	 */
 	constructor(options?: ActorSystemOptions) {
 	    this.logger = options?.logger ?? new ConsoleLogger();
@@ -70,7 +75,7 @@ export class ActorSystem {
 	 * Creates a new actor
 	 * @param actorType Type of the Actor
 	 * @param options Options for the new actor (name, shutdown strategy, parent actor)
-	 * @param params Additional arbitrary parameters. Will be passed to the actual actors constructor
+	 * @param params Additional arbitrary constructor parameters. Will be passed to the actual actors constructor
 	 * @returns Reference to the new actor
 	 */
 	public createActor<X, Y, T extends Actor<X, Y> = Actor<X, Y>>(actorType: ActorClass<T>, options: ActorOptions, ...params: unknown[]): ActorRefImpl {
@@ -111,8 +116,8 @@ export class ActorSystem {
 
 	/**
 	 * Send a message (from the system actor) to the target
-	 * @param to target actor
-	 * @param message 
+	 * @param to target actor ref or uri
+	 * @param message message to send
 	 */
 	public async send<T>(to: ActorRef | string, message: T) {
 	    this.inbox.next({from: this.systemActor.ref.name, to: typeof(to) === "string" ? to : to.name, message, askTimeout: 0});
@@ -120,7 +125,7 @@ export class ActorSystem {
 
 	/**
 	 * Returns the child actors of the given actor (or of the system actor if ref is omitted)
-	 * @param ref 
+	 * @param ref actor ref
 	 * @returns all children of the actor
 	 */
 	public childrenOf(ref?: ActorRefImpl): ActorRefImpl[] {
@@ -159,7 +164,7 @@ export class ActorSystem {
 	 * @param to target actor
 	 * @param message message
 	 * @param timeout optional timeout, defaults to 5 seconds
-	 * @returns result from the target actor
+	 * @returns result value from the target actor
 	 */
 	public async ask<S, V>(to: ActorRef | string, message: V, timeout = 5000): Promise<S> {
 	    return new Promise((resolve) => {
@@ -168,7 +173,7 @@ export class ActorSystem {
 	}
     
 	/**
-	 * Returns whether the actor is currently running
+	 * Returns whether the actor system is currently shut down or is running
 	 */
 	public get isShutdown() : boolean {
 	    return !this.running;
@@ -214,6 +219,7 @@ export class ActorSystem {
 	        const targetRef = this.actors.get(msg.from)?.ref;
 	        const actor = targetRef ?? clone(this.systemActor.ref);
 	        if (!targetRef) {
+	            // eslint-disable-next-line @typescript-eslint/no-explicit-any
 	            (actor as any).name = msg.from;
 	        }
 	        const result = await target?.receive(actor, msg.message);
@@ -242,7 +248,7 @@ export class ActorSystem {
 }
 
 /**
- * The base actor for the whole system
+ * The base actor for the whole system. This is serving as a parent to all other actors.
  */
 class SystemActor extends Actor<unknown, void> {
     constructor(name: string, actorSystem: ActorSystem) {

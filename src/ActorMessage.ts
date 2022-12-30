@@ -2,9 +2,14 @@
  * Message passed between actors
  */
 export interface ActorMessage<T, U> {
-    from: string; // Sender's actor address 
-    to: string; // Receiver's actor address
-    message: T; // Message payload
-    ask?: (result: U) => void; // Result callback if message waits for a result
-    askTimeout: number; // Ask timeout in ms
+	// Sender's actor address 
+    from: string; 
+	// Receiver's actor address
+    to: string; 
+	// Message payload
+    message: T; 
+	// Result callback if message waits for a result
+    ask?: (result: U) => void; 
+	// Ask timeout in ms if message waits for a result (0 otherwise)
+    askTimeout: number; 
 }

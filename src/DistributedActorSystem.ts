@@ -13,8 +13,11 @@ import { ActorSystem } from "./ActorSystem";
  * Please be aware that only token-based auth is supported for now.
  */
 export interface DistributedActorSystemOptions extends ActorSystemOptions {
-	natsSecret?: string; // Only needed if secret token auth is used in NATS
-	natsServer?: string; // Defaults to localhost
+	/** Only needed if secret token auth is used in NATS */
+	natsSecret?: string; 
+	/** Server uri for nats. Defaults to localhost */
+	natsServer?: string; 
+	/** Port the nats server is running on. */
 	natsPort: string;
 }
 
@@ -22,6 +25,13 @@ export class DistributedActorSystem extends ActorSystem {
     private natsConnection!: NatsConnection;
     private natsSubscription!: Subscription;
 
+    /**
+	 * @inheritDoc 
+	 * Create a new distributed actor system. This servers a single node for the distributed system. Messages to local actors are handled normally, messages to other nodes
+	 * are transported using nats.
+	 * Every node needs a unique system name!
+	 * @param options Distribution options.
+	 */
     constructor(options: DistributedActorSystemOptions) {
         super(options);
         this.running = false;
@@ -50,6 +60,9 @@ export class DistributedActorSystem extends ActorSystem {
         this.handleInboxMessage = super.handleInboxMessage.bind(this);
     }
 
+    /**
+	 * Shut down the system and the nats server connection
+	 */
     public override shutdown(): void {
         super.shutdown();
         this.natsConnection.close();

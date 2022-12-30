@@ -1,6 +1,11 @@
 import type { Actor } from "./Actor";
 import type { ActorRef } from "./ActorRef";
 
+/**
+ * @inheritDoc 
+ * Implementation of ActorRef
+ * Never use this class directly!
+ */
 export class ActorRefImpl implements ActorRef {
     /**
 	 * Creates an ActorRef from an actor
@@ -10,28 +15,28 @@ export class ActorRefImpl implements ActorRef {
     }
 
     /**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
     public send<T>(to: ActorRef, message: T): void {
         this.actor.send(to, message);
     }
 
     /**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
     public async ask<T, U>(to: ActorRef, message: T, askCallback: (message: U) => void, askTimeout: number): Promise<void> {
         this.actor.ask<T, U>(to, message, askTimeout).then(result => askCallback(result));
     }
 
     /**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
     public get name(): string {
         return this.actor.name;
     }
 
     /**
-	 * @inheritdoc
+	 * @inheritDoc
 	 */
     public get isShutdown(): boolean {
         return this.actor.isShutdown;

@@ -25,7 +25,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">DistributedActorSystem</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L21">src/DistributedActorSystem.ts:21</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L24">src/DistributedActorSystem.ts:24</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -74,17 +74,24 @@
 <section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_DistributedActorSystem">new <wbr/>Distributed<wbr/>Actor<wbr/>System<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">DistributedActorSystemOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="DistributedActorSystem.html" class="tsd-signature-type" data-tsd-kind="Class">DistributedActorSystem</a><a href="#constructor.new_DistributedActorSystem" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_DistributedActorSystem">new <wbr/>Distributed<wbr/>Actor<wbr/>System<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">: </span><a href="../interfaces/DistributedActorSystemOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">DistributedActorSystemOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="DistributedActorSystem.html" class="tsd-signature-type" data-tsd-kind="Class">DistributedActorSystem</a><a href="#constructor.new_DistributedActorSystem" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography">
+<h3>Inherit Doc</h3><p>a new distributed actor system. This servers a single node for the distributed system. Messages to local actors are handled normally, messages to other nodes
+are transported using nats.
+Every node needs a unique system name!</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>options: <span class="tsd-signature-type">DistributedActorSystemOptions</span></h5></li></ul></div>
+<h5>options: <a href="../interfaces/DistributedActorSystemOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">DistributedActorSystemOptions</a></h5>
+<div class="tsd-comment tsd-typography"><p>Distribution options.</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="DistributedActorSystem.html" class="tsd-signature-type" data-tsd-kind="Class">DistributedActorSystem</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L25">src/DistributedActorSystem.ts:25</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L35">src/DistributedActorSystem.ts:35</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="actors" class="tsd-anchor"></a>
@@ -92,53 +99,53 @@
 <div class="tsd-signature">actors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">AnyActor</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#actors">actors</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L29">src/ActorSystem.ts:29</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L36">src/ActorSystem.ts:36</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a id="inbox" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>inbox</span><a href="#inbox" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">inbox<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Subject</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ActorMessage.html" class="tsd-signature-type" data-tsd-kind="Interface">ActorMessage</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#inbox">inbox</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L32">src/ActorSystem.ts:32</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L39">src/ActorSystem.ts:39</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="inboxSubscription" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>inbox<wbr/>Subscription</span><a href="#inboxSubscription" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">inbox<wbr/>Subscription<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Subscription</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#inboxSubscription">inboxSubscription</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L34">src/ActorSystem.ts:34</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L41">src/ActorSystem.ts:41</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="logger" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>logger</span><a href="#logger" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">logger<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#logger">logger</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L37">src/ActorSystem.ts:37</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L44">src/ActorSystem.ts:44</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="natsConnection" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>nats<wbr/>Connection</span><a href="#natsConnection" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">nats<wbr/>Connection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NatsConnection</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L22">src/DistributedActorSystem.ts:22</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L25">src/DistributedActorSystem.ts:25</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private"><a id="natsSubscription" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>nats<wbr/>Subscription</span><a href="#natsSubscription" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">nats<wbr/>Subscription<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Subscription</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L23">src/DistributedActorSystem.ts:23</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L26">src/DistributedActorSystem.ts:26</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="running" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>running</span><a href="#running" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">running<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#running">running</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L36">src/ActorSystem.ts:36</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L43">src/ActorSystem.ts:43</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="systemActor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>system<wbr/>Actor</span><a href="#systemActor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">system<wbr/>Actor<span class="tsd-signature-symbol">:</span> <a href="Actor.html" class="tsd-signature-type" data-tsd-kind="Class">Actor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#systemActor">systemActor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L30">src/ActorSystem.ts:30</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L37">src/ActorSystem.ts:37</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="systemName" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>system<wbr/>Name</span><a href="#systemName" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">system<wbr/>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#systemName">systemName</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L38">src/ActorSystem.ts:38</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L45">src/ActorSystem.ts:45</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Accessors</h2>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="isShutdown" class="tsd-anchor"></a>
@@ -146,12 +153,12 @@
 <ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
 <li class="tsd-signature" id="isShutdown.isShutdown-1"><span class="tsd-signature-symbol">get</span> isShutdown<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Returns whether the actor is currently running</p>
+<div class="tsd-comment tsd-typography"><p>Returns whether the actor system is currently shut down or is running</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
 <p>Inherited from ActorSystem.isShutdown</p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L173">src/ActorSystem.ts:173</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L178">src/ActorSystem.ts:178</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="ask" class="tsd-anchor"></a>
@@ -161,7 +168,7 @@
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Ask another actor using a message</p>
 
-<h3>Returns</h3><p>result from the target actor</p>
+<h3>Returns</h3><p>result value from the target actor</p>
 </div>
 <section class="tsd-panel tsd-type-parameters">
 <h4>Type Parameters</h4>
@@ -188,7 +195,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">S</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#ask">ask</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L164">src/ActorSystem.ts:164</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L169">src/ActorSystem.ts:169</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="childrenOf" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>children<wbr/>Of</span><a href="#childrenOf" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -202,11 +209,13 @@
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> ref: <span class="tsd-signature-type">ActorRefImpl</span></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> ref: <span class="tsd-signature-type">ActorRefImpl</span></h5>
+<div class="tsd-comment tsd-typography"><p>actor ref</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ActorRefImpl</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#childrenOf">childrenOf</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L126">src/ActorSystem.ts:126</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L131">src/ActorSystem.ts:131</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="createActor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Actor</span><a href="#createActor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -238,12 +247,12 @@
 </div></li>
 <li>
 <h5><code class="tsd-tag ts-flagRest">Rest</code> <span class="tsd-signature-symbol">...</span>params: <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">[]</span></h5>
-<div class="tsd-comment tsd-typography"><p>Additional arbitrary parameters. Will be passed to the actual actors constructor</p>
+<div class="tsd-comment tsd-typography"><p>Additional arbitrary constructor parameters. Will be passed to the actual actors constructor</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ActorRefImpl</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#createActor">createActor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L76">src/ActorSystem.ts:76</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L81">src/ActorSystem.ts:81</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="getActorRef" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Actor<wbr/>Ref</span><a href="#getActorRef" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -261,7 +270,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">ActorRefImpl</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Error</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#getActorRef">getActorRef</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L105">src/ActorSystem.ts:105</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L110">src/ActorSystem.ts:110</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="handleInboxMessage" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>handle<wbr/>Inbox<wbr/>Message</span><a href="#handleInboxMessage" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -279,7 +288,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#handleInboxMessage">handleInboxMessage</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L182">src/ActorSystem.ts:182</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L187">src/ActorSystem.ts:187</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="onData" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>on<wbr/>Data</span><a href="#onData" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -292,7 +301,7 @@
 <h5>message: <span class="tsd-signature-type">Msg</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L99">src/DistributedActorSystem.ts:99</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L112">src/DistributedActorSystem.ts:112</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="remoteSubscription" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>remote<wbr/>Subscription</span><a href="#remoteSubscription" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -305,7 +314,7 @@
 <h5>msg: <a href="../interfaces/ActorMessage.html" class="tsd-signature-type" data-tsd-kind="Interface">ActorMessage</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L58">src/DistributedActorSystem.ts:58</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L71">src/DistributedActorSystem.ts:71</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="remove" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -321,7 +330,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#remove">remove</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L146">src/ActorSystem.ts:146</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L151">src/ActorSystem.ts:151</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="requestOverNetwork" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>request<wbr/>Over<wbr/>Network</span><a href="#requestOverNetwork" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -340,7 +349,7 @@
 <h5>msg: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ActorMessage.html" class="tsd-signature-type" data-tsd-kind="Interface">ActorMessage</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ActorMessage.html" class="tsd-signature-type" data-tsd-kind="Interface">ActorMessage</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L84">src/DistributedActorSystem.ts:84</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L97">src/DistributedActorSystem.ts:97</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="send" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>send</span><a href="#send" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -358,14 +367,16 @@
 <ul class="tsd-parameter-list">
 <li>
 <h5>to: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/ActorRef.html" class="tsd-signature-type" data-tsd-kind="Interface">ActorRef</a></h5>
-<div class="tsd-comment tsd-typography"><p>target actor</p>
+<div class="tsd-comment tsd-typography"><p>target actor ref or uri</p>
 </div></li>
 <li>
-<h5>message: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5></li></ul></div>
+<h5>message: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5>
+<div class="tsd-comment tsd-typography"><p>message to send</p>
+</div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#send">send</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L117">src/ActorSystem.ts:117</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L122">src/ActorSystem.ts:122</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="sendOverNetwork" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>send<wbr/>Over<wbr/>Network</span><a href="#sendOverNetwork" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -380,18 +391,18 @@
 <h5>msg: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ActorMessage.html" class="tsd-signature-type" data-tsd-kind="Interface">ActorMessage</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L88">src/DistributedActorSystem.ts:88</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L101">src/DistributedActorSystem.ts:101</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="shutdown" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>shutdown</span><a href="#shutdown" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="shutdown.shutdown-1">shutdown<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#shutdown.shutdown-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Shutdown the whole system</p>
+<div class="tsd-comment tsd-typography"><p>Shut down the system and the nats server connection</p>
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Overrides <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#shutdown">shutdown</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L53">src/DistributedActorSystem.ts:53</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L66">src/DistributedActorSystem.ts:66</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="started" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>started</span><a href="#started" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -402,7 +413,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#started">started</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L58">src/ActorSystem.ts:58</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L63">src/ActorSystem.ts:63</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private"><a id="subscribeToBus" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagPrivate">Private</code> <span>subscribe<wbr/>To<wbr/>Bus</span><a href="#subscribeToBus" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
@@ -410,7 +421,7 @@
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/DistributedActorSystem.ts#L92">src/DistributedActorSystem.ts:92</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/DistributedActorSystem.ts#L105">src/DistributedActorSystem.ts:105</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="updateChildren" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>update<wbr/>Children</span><a href="#updateChildren" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -428,7 +439,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="ActorSystem.html">ActorSystem</a>.<a href="ActorSystem.html#updateChildren">updateChildren</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/dbd522c/src/ActorSystem.ts#L153">src/ActorSystem.ts:153</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/hbel/ts-actors/blob/7b1a3f5/src/ActorSystem.ts#L158">src/ActorSystem.ts:158</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
