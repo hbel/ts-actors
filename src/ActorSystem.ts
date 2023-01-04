@@ -42,7 +42,7 @@ export class ActorSystem {
 
     protected running = false; // Signals the system is running
 	protected readonly logger: Logger;
-	protected readonly systemName: string;
+	public readonly systemName: string;
 
 	/**
 	 * @param options Option object (can be omitted)
@@ -78,7 +78,7 @@ export class ActorSystem {
 	 * @param params Additional arbitrary constructor parameters. Will be passed to the actual actors constructor
 	 * @returns Reference to the new actor
 	 */
-	public createActor<X, Y, T extends Actor<X, Y> = Actor<X, Y>>(actorType: ActorClass<T>, options: ActorOptions, ...params: unknown[]): ActorRefImpl {
+	public async createActor<X, Y, T extends Actor<X, Y> = Actor<X, Y>>(actorType: ActorClass<T>, options: ActorOptions, ...params: unknown[]): Promise<ActorRefImpl> {
 	    const [...args] = params;
 	    const {name, parent, strategy} = options ?? {};
 	    const actorName = (parent ? parent.actor.name + "/" : `actors://${this.systemName}/`) + (name || actorType.name + "_" + v1());
@@ -98,7 +98,7 @@ export class ActorSystem {
 	    if (strategy) {
 	        newActor.strategy = strategy;
 	    }
-	    newActor.afterStart();
+	    await newActor.afterStart();
 	    return newActor.ref;
 	}
 
@@ -139,8 +139,8 @@ export class ActorSystem {
 	/**
 	 * Shutdown the whole system
 	 */
-	public shutdown(): void {
-	    this.systemActor.shutdown.bind(this.systemActor)();
+	public async shutdown(): Promise<void> {
+	    await this.systemActor.shutdown.bind(this.systemActor)();
 	    this.inbox.complete();
 	    this.inbox.unsubscribe();
 	}

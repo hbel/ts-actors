@@ -12,9 +12,9 @@ describe("ActorSystem", () => {
         expect(system.isShutdown).toBeFalsy();
         system.shutdown();
     });
-    it("should properly shut down", () => {
+    it("should properly shut down", async () => {
         const system = new ActorSystem();
-        system.shutdown();
+        await system.shutdown();
         expect((system.getActorRef("actors://system") as ActorRefImpl).isShutdown).toBeTruthy();
         expect(system.isShutdown).toBeFalsy();
     });

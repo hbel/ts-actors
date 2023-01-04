@@ -34,41 +34,41 @@ export abstract class Actor<T, U> {
     /**
 	 * Runs before the actor is started by the actor system
 	 */
-    public beforeStart (): void { 
-        return; 
+    public beforeStart (): Promise<void> { 
+        return Promise.resolve(); 
     }
 
     /**
 	 * Runs after the actor was started and is ready to receive messages
 	 */
-    public afterStart (): void { 
-        return; 
+    public afterStart (): Promise<void> { 
+        return Promise.resolve(); 
     }
 
     /**
 	 * Runs before the actor gets shut down by the actor system
 	 */
-    public beforeShutdown (): void { 
-        return; 
+    public beforeShutdown (): Promise<void> { 
+        return Promise.resolve(); 
     }
 
     /**
 	 * Runs after the actor was shut down.
 	 */
-    public afterShutdown (): void { 
-        return; 
+    public afterShutdown (): Promise<void> { 
+        return Promise.resolve(); 
     }
 
     /**
 	 * Calling restart will reinstantiate the actor and exchange its old instance for the new one. All child actors will be restartet, too.
 	 */
-    public restart(): void {
+    public async restart(): Promise<void> {
         try {
             if (!this.actorRef) {
                 throw new Error("Actor reference got lost. This is a critical error");
             }
             this.children.forEach(c => c.actor.restart());
-            const actorRef = this.system.createActor<T, U>(this.constructor as any, {...this.options, overwriteExisting: true}, this.params);
+            const actorRef = await this.system.createActor<T, U>(this.constructor as any, {...this.options, overwriteExisting: true}, this.params);
             actorRef.actor.actorRef = this.actorRef;                
             actorRef.actor.children = [...this.children];
             this.system.updateChildren(this.actorRef, actorRef);
@@ -133,19 +133,19 @@ export abstract class Actor<T, U> {
     /**
 	 * Stop processing for this actor. This will also shut down and remove all child actors.
 	 */
-    public shutdown(): void {
+    public async shutdown(): Promise<void> {
         if (this.isShutdown) {
             this.logger.warn(`${this.name} is already shut down!`);
         }
-        this.beforeShutdown();
-        this.children.filter(c => !c.actor.isShutdown).forEach(child => {
+        await this.beforeShutdown();
+        await Promise.allSettled(this.children.filter(c => !c.actor.isShutdown).map(async child => {
             this.logger.debug(`${this.name} - Shutting down child: ${child.name}`);
-            child.actor.shutdown();
-        });
+            return await child.actor.shutdown();
+        }));
         this.isShutdown = true;
         this.parent?.actor?.removeChild(this.ref);
         this.actorSystem.remove(this.ref);
-        this.afterShutdown();
+        await this.afterShutdown();
     }
 
     /**

@@ -35,10 +35,12 @@ class TestActor extends Actor<any, void|number|string> {
 
     public override afterStart() {
         this.myStore = "started";
+        return Promise.resolve();
     }
 
     public override afterShutdown() {
         this.myStore = "shut down";
+        return Promise.resolve();
     }
 }
 
@@ -53,14 +55,14 @@ afterEach(() => {
 });
 
 describe("Actor", () => {
-    it("should be started", () => {
-        const actor = system.createActor(TestActor, {name: "testActor"});
+    it("should be started", async () => {
+        const actor = await system.createActor(TestActor, {name: "testActor"});
         expect(actor.name).toBe("actors://system/testActor");
         expect(system.getActorRef("actors://system/testActor") instanceof ActorRefImpl).toBeTruthy();
         expect(actor.isShutdown).toBeFalsy();
     });
-    it("should respond to a message", (done) => {
-        const actor = system.createActor(TestActor, {name: "testActor"});
+    it("should respond to a message", async (done) => {
+        const actor = await system.createActor(TestActor, {name: "testActor"});
         system.send(actor, {command: "doSomething", text: "nice"});
         setTimeout(() => {
             expect((actor.actor as TestActor).myStore).toBe("nice");
@@ -68,23 +70,23 @@ describe("Actor", () => {
         }, 100);
     });
     it("should answer to ask", async () => {
-        const actor = system.createActor(TestActor, {name: "testActor"});
+        const actor = await system.createActor(TestActor, {name: "testActor"});
         const name = await system.ask(actor, {command: "callerName"});        
         expect(name).toBe("actors://system");
         const num = await system.ask(actor, {command: "number"});
         expect(num).toBe(1);
     });
     it("should timeout", async () => {
-        const actor = system.createActor(TestActor, {name: "testActor"});
+        const actor = await system.createActor(TestActor, {name: "testActor"});
         const askPromise = system.ask(actor, {command: "timeout"}, 10);
         expect(askPromise).rejects.toBeTruthy();
     });
-    it("should set state on afterStart", () => {
-        const actor = system.createActor(TestActor, {name: "testActor"});
+    it("should set state on afterStart", async () => {
+        const actor = await system.createActor(TestActor, {name: "testActor"});
         expect((actor.actor as TestActor).myStore).toBe("started");
     });
-    it("should set state on afterShutdown", (done) => {
-        const actor = system.createActor(TestActor, {name: "testActor"});
+    it("should set state on afterShutdown", async (done) => {
+        const actor = await system.createActor(TestActor, {name: "testActor"});
         actor.actor.shutdown();
         setTimeout(() => {
             expect(actor.actor.isShutdown).toBeTruthy();

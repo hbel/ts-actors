@@ -48,21 +48,28 @@ class StorageActor extends Actor<Action, number | void | boolean> {
 }
 
 
-const getVals = async () => {
-    console.log(await system.ask(storage, Actions.Empty()));
-    console.log(await system.ask(storage, Actions.Pop()));
-    console.log(await system.ask(storage, Actions.Empty()));
-    console.log(await system.ask(storage, Actions.Pop()));
-    console.log(await system.ask(storage, Actions.Empty()));
-    console.log(await system.ask(storage, Actions.Pop()));
-    console.log(await system.ask(storage, Actions.Empty()));
-    console.log(await system.ask(storage, Actions.Pop()));
-    system.shutdown();
-};
 
-const system = new ActorSystem({logger});
-const storage = system.createActor(StorageActor, {name: "storage"});
-system.send(storage, Actions.Append(10));
-system.send(storage, Actions.Append(20));
-system.send(storage, Actions.Append(30));
-getVals();
+
+async function run() {
+    const system = new ActorSystem({logger});
+    const storage = await system.createActor(StorageActor, {name: "storage"});
+    system.send(storage, Actions.Append(10));
+    system.send(storage, Actions.Append(20));
+    system.send(storage, Actions.Append(30));
+
+    const getVals = async () => {
+        console.log(await system.ask(storage, Actions.Empty()));
+        console.log(await system.ask(storage, Actions.Pop()));
+        console.log(await system.ask(storage, Actions.Empty()));
+        console.log(await system.ask(storage, Actions.Pop()));
+        console.log(await system.ask(storage, Actions.Empty()));
+        console.log(await system.ask(storage, Actions.Pop()));
+        console.log(await system.ask(storage, Actions.Empty()));
+        console.log(await system.ask(storage, Actions.Pop()));
+        system.shutdown();
+    };
+
+    getVals();
+}
+
+run();

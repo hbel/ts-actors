@@ -1,9 +1,8 @@
-import type { Msg, NatsConnection , Subscription } from "nats";
-import { connect,JSONCodec } from "nats";
 
 import type { ActorMessage } from "./ActorMessage";
 import type { ActorSystemOptions } from "./ActorSystem";
 import { ActorSystem } from "./ActorSystem";
+import type { Distributor } from "./Distributor";
 
 /**
  * Additional options to allow distributed message passing, e.g. between different worker threads, processes or even different machines.
@@ -13,60 +12,46 @@ import { ActorSystem } from "./ActorSystem";
  * Please be aware that only token-based auth is supported for now.
  */
 export interface DistributedActorSystemOptions extends ActorSystemOptions {
-	/** Only needed if secret token auth is used in NATS */
-	natsSecret?: string; 
-	/** Server uri for nats. Defaults to localhost */
-	natsServer?: string; 
-	/** Port the nats server is running on. */
-	natsPort: string;
+	distributor: Distributor;
 }
 
 export class DistributedActorSystem extends ActorSystem {
-    private natsConnection!: NatsConnection;
-    private natsSubscription!: Subscription;
+	private readonly distributor: Distributor;
 
-    /**
-	 * @inheritDoc 
+	/**
 	 * Create a new distributed actor system. This servers a single node for the distributed system. Messages to local actors are handled normally, messages to other nodes
 	 * are transported using nats.
 	 * Every node needs a unique system name!
-	 * @param options Distribution options.
+	 * @param options Distribution options (and general actor system options).
 	 */
-    constructor(options: DistributedActorSystemOptions) {
-        super(options);
-        this.running = false;
-        const port = options.natsPort;
-        const token = options.natsSecret;
-        const server = options.natsServer ?? "localhost";
+	constructor(options: DistributedActorSystemOptions) {
+	    super(options);
+	    this.running = false;
+	    this.distributor = options.distributor;
 
-        this.logger.debug(`Connecting to nats on localhost on port ${port}`);
+	    // The original message handler will be used if the message can be handled
+	    // locally. This is implemented in the new message handler (this.remoteSubscription)
+	    this.inboxSubscription.unsubscribe();
+	    this.inboxSubscription = this.inbox.subscribe(this.remoteSubscription);
+	    this.handleInboxMessage = super.handleInboxMessage.bind(this);
 
-        connect({
-            servers: [server + ":" + port],
-            token
-        }).then(client => { 
-            this.natsConnection = client;
-            this.logger.debug("Connection to nats server established");
-            this.subscribeToBus();
-            this.running = true;
-        }).catch(() => {
-            this.logger.error("Nats server connection could not be created");
-        });
+	    this.distributor.connect().then(() => { 
+	        this.logger.debug("Connection to RPC bus established");
+	        this.distributor.subscribe((msg) => this.inbox.next(msg));
+	        this.running = true;
+	    }).catch(() => {
+	        this.logger.error("RPC bus connection could not be created");
+	    });
 
-        // The original message handler will be used if the message can be handled
-        // locally. This is implemented in the new message handler (this.remoteSubscription)
-        this.inboxSubscription.unsubscribe();
-        this.inboxSubscription = this.inbox.subscribe(this.remoteSubscription);
-        this.handleInboxMessage = super.handleInboxMessage.bind(this);
-    }
+	}
 
-    /**
-	 * Shut down the system and the nats server connection
+	/**
+	 * Shut down the system and the distributed server connection
 	 */
-    public override shutdown(): void {
-        super.shutdown();
-        this.natsConnection.close();
-    }
+	public override async shutdown(): Promise<void> {
+	    await super.shutdown();
+	    await this.distributor.disconnect();
+	}
 	
     private remoteSubscription = async (msg: ActorMessage<unknown, unknown>) => {
         const actorName = msg.to;
@@ -81,39 +66,11 @@ export class DistributedActorSystem extends ActorSystem {
 
         if (msg.ask) {
             const ask = msg.ask;
-            this.requestOverNetwork(channel, msg)
+            this.distributor.ask(channel, msg)
                 .then((result) => ask(Promise.resolve(result)))
                 .catch(() => ask(Promise.reject(`Ask from ${msg.from} timed out`)));
         } else {
-            this.sendOverNetwork(channel, msg);
+            this.distributor.send(channel, msg);
         }
     };
-
-    /**
-     * Make an RPC call
-     * @param e event to send to the remote processor
-     * @returns tuple of returned entity value(s) and transaction id
-     */
-    private async requestOverNetwork(channel: string, msg: Partial<ActorMessage<unknown, unknown>>): Promise<ActorMessage<unknown, unknown>> {
-        return this.natsConnection.request(channel, JSONCodec().encode(msg), { timeout: 5000}).then(m => JSONCodec<ActorMessage<unknown, unknown>>().decode(m.data));
-    }
-
-    private sendOverNetwork(channel: string, msg: Partial<ActorMessage<unknown, unknown>>): void {
-        this.natsConnection.publish(channel, JSONCodec().encode(msg));
-    }
-
-    private async subscribeToBus() {
-        this.natsSubscription = this.natsConnection.subscribe(this.systemName+".>");
-        for await (const msg of this.natsSubscription) {
-            this.onData(msg);
-        }
-    }
-
-    private onData(message: Msg): void {
-        const msg = JSONCodec<ActorMessage<unknown, unknown>>().decode(message.data);
-        if (msg.askTimeout) {
-            msg.ask = t => message.respond(JSONCodec().encode(t));
-        }
-        this.inbox.next(msg);
-    }
 }

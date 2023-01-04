@@ -55,8 +55,9 @@ class PingPongActor extends Actor<Action, void> {
 }
 
 const system = new ActorSystem({logger});
-system.createActor(PingPongActor, {name: "one"});
-system.createActor(PingPongActor, {name: "two"}, system.getActorRef("actors://system/one"));
+system.createActor(PingPongActor, {name: "one"}).then(() => {
+    system.createActor(PingPongActor, {name: "two"}, system.getActorRef("actors://system/one"));
+});
 
 const shutdownHook = () => {
     const children = system.childrenOf(system.getActorRef("actors://system") as ActorRefImpl);

@@ -2,6 +2,7 @@ import { Actor } from "../src/Actor";
 import type { ActorRef } from "../src/ActorRef";
 import type { ActorSystem } from "../src/ActorSystem";
 import { DistributedActorSystem } from "../src/DistributedActorSystem";
+import { NatsDistributor } from "../src/NatsDistributor";
 
 class Ping extends Actor<string, void|string> {
 	private counter = 0;
@@ -63,11 +64,18 @@ class Pong extends Actor<string, void> {
 	}
 }
 
-const systemA = new DistributedActorSystem({systemName: "SA", natsPort: "9999"});
-const ping = systemA.createActor(Ping, { name: "PING" });
+async function run() {
+    const distributor1 = new NatsDistributor("SA", "9999");
+    const distributor2 = new NatsDistributor("SB", "9999");
 
-const systemB = new DistributedActorSystem({systemName: "SB", natsPort: "9999"});
-const pong = systemB.createActor(Pong, { name: "PONG" });
+    const systemA = new DistributedActorSystem({distributor: distributor1, systemName: "SA"});
+    const ping = await systemA.createActor(Ping, { name: "PING" });
 
-systemA.started().then(() => systemA.send(ping, "PING"));
-systemB.started().then(() => systemB.send(pong, "ASK"));
+    const systemB = new DistributedActorSystem({distributor: distributor2, systemName: "SB"});
+    const pong = await systemB.createActor(Pong, { name: "PONG" });
+
+    systemA.started().then(() => systemA.send(ping, "PING"));
+    systemB.started().then(() => systemB.send(pong, "ASK"));
+}
+
+run();

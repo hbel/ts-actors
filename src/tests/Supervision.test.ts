@@ -36,16 +36,16 @@ afterEach(() => {
 });
 
 describe("Supervisioned actor", () => {
-    it("should shut down by default", (done) => {
-        const actor = system.createActor(TestActor, {name: "testActor"});
+    it("should shut down by default", async (done) => {
+        const actor = await system.createActor(TestActor, {name: "testActor"});
         system.send(actor, "error");
         setTimeout(() => {
             expect(actor.isShutdown).toBeTruthy();
             done();
         }, 50);
     });
-    it("should shut down if supervision strategy is shutdown", (done) => {
-        const actor = system.createActor(TestActor, {name: "testActor", strategy: "Shutdown" as SupervisionStrategy});
+    it("should shut down if supervision strategy is shutdown", async (done) => {
+        const actor = await system.createActor(TestActor, {name: "testActor", strategy: "Shutdown" as SupervisionStrategy});
         system.send(actor, "error");
         setTimeout(() => {
             expect(actor.isShutdown).toBeTruthy();
@@ -53,14 +53,14 @@ describe("Supervisioned actor", () => {
         }, 50);
     });
     it("should keep its state and run if supervision strategy is resume", async () => {
-        const actor = system.createActor(TestActor, {name: "testActor", strategy: "Resume" as SupervisionStrategy});
+        const actor = await system.createActor(TestActor, {name: "testActor", strategy: "Resume" as SupervisionStrategy});
         system.send(actor, "foobar");
         system.send(actor, "error");
         const foobar = await system.ask(actor, "getState");
         expect(foobar).toBe("foobar");
     });    
     it("should loose its state and run if supervision strategy is restart", async () => {
-        const actor = system.createActor(TestActor, {name: "testActor", strategy: "Restart" as SupervisionStrategy});
+        const actor = await system.createActor(TestActor, {name: "testActor", strategy: "Restart" as SupervisionStrategy});
         system.send(actor, "foobar");
         system.send(actor, "error");
         await new Promise((resolver) => setTimeout(resolver, 500));
@@ -70,9 +70,9 @@ describe("Supervisioned actor", () => {
 });
 
 describe("For children of supervisioned actors", () => {
-    it("should shut down by default", (done) => {
-        const parent = system.createActor(TestActor, {name: "parent", strategy: "Shutdown" as SupervisionStrategy});
-        const actor = system.createActor(TestActor, {name: "child", parent});
+    it("should shut down by default", async (done) => {
+        const parent = await system.createActor(TestActor, {name: "parent", strategy: "Shutdown" as SupervisionStrategy});
+        const actor = await system.createActor(TestActor, {name: "child", parent});
         system.send(parent, "error");
         setTimeout(() => {
             expect(parent.isShutdown).toBeTruthy();
@@ -80,9 +80,9 @@ describe("For children of supervisioned actors", () => {
             done();
         }, 50);
     });
-    it("should shut down if supervision strategy is shutdown", (done) => {
-        const parent = system.createActor(TestActor, {name: "parent", strategy: "Shutdown" as SupervisionStrategy});
-        const actor = system.createActor(TestActor, {name: "child", parent});
+    it("should shut down if supervision strategy is shutdown", async (done) => {
+        const parent = await system.createActor(TestActor, {name: "parent", strategy: "Shutdown" as SupervisionStrategy});
+        const actor = await system.createActor(TestActor, {name: "child", parent});
         system.send(parent, "error");
         setTimeout(() => {
             expect(parent.isShutdown).toBeTruthy();
@@ -91,16 +91,16 @@ describe("For children of supervisioned actors", () => {
         }, 500);
     });
     it("should keep its state and run if supervision strategy is resume", async () => {
-        const parent = system.createActor(TestActor, {name: "parent", strategy: "Resume" as SupervisionStrategy});
-        const actor = system.createActor(TestActor, {name: "child", parent});
+        const parent = await system.createActor(TestActor, {name: "parent", strategy: "Resume" as SupervisionStrategy});
+        const actor = await system.createActor(TestActor, {name: "child", parent});
         system.send(actor, "foobar");
         system.send(parent, "error");
         const foobar = await system.ask(actor, "getState");
         expect(foobar).toBe("foobar");
     });    
     it("should loose its state and run if supervision strategy is restart", async () => {
-        const parent = system.createActor(TestActor, {name: "parent", strategy: "Restart" as SupervisionStrategy});
-        const actor = system.createActor(TestActor, {name: "child", parent});
+        const parent = await system.createActor(TestActor, {name: "parent", strategy: "Restart" as SupervisionStrategy});
+        const actor = await system.createActor(TestActor, {name: "child", parent});
         system.send(actor, "foobar");
         system.send(parent, "error");
         await new Promise((resolver) => setTimeout(resolver, 500));
