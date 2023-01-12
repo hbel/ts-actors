@@ -27,19 +27,19 @@ export abstract class Actor<T, U> {
 	 * @param params any additional parameters given on actor creation
 	 */
     protected constructor(public readonly name: string, private actorSystem: ActorSystem, private params?: any[]) {
-        this.beforeStart();
         this.actorRef = new ActorRefImpl(this);
     }
 
     /**
-	 * Runs before the actor is started by the actor system
+	 * Runs before the actor is started by the actor system. This will run after the actors constructor was called and it's options and parents were set, but 
+	 * before the actor gets integrated into the actor system's hierarchy.
 	 */
     public beforeStart (): Promise<void> { 
         return Promise.resolve(); 
     }
 
     /**
-	 * Runs after the actor was started and is ready to receive messages
+	 * Runs after the actor was started and is ready to receive messages.
 	 */
     public afterStart (): Promise<void> { 
         return Promise.resolve(); 

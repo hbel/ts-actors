@@ -89,6 +89,7 @@ export class ActorSystem {
 	    newActor.options = options;
 	    newActor.logger = this.logger;
 	    newActor.parent = parent ?? this.systemActor.ref;
+	    await newActor.beforeStart();
 	    this.actors.set(newActor.name, newActor);
 	    if (parent) {
 	        parent.actor.appendChild(newActor);
@@ -210,9 +211,9 @@ export class ActorSystem {
 	        if (msg.ask) {
 	            const ask = msg.ask;
 	            ts = setTimeout(() => {
-	                this.logger && this.logger.debug(`Ask from ${msg.from} timed out at ${Date.now().toLocaleString()}`);
+	                this.logger && this.logger.debug(`Ask from ${msg.from} to ${msg.to} timed out at ${Date.now().toLocaleString()}`);
 	                timedOut = true;
-	                ask(Promise.reject(`Ask from ${msg.from} timed out at ${Date.now().toLocaleString()}`));
+	                ask(Promise.reject(`Ask from ${msg.from} to ${msg.to} timed out at ${Date.now().toLocaleString()}`));
 	            }, msg.askTimeout);
 	        }
 	        // This is a fix for the fact that distributed actors need to set the name to the original caller, not the local one

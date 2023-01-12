@@ -68,7 +68,7 @@ export class DistributedActorSystem extends ActorSystem {
             const ask = msg.ask;
             this.distributor.ask(channel, msg)
                 .then((result) => ask(Promise.resolve(result)))
-                .catch(() => ask(Promise.reject(`Ask from ${msg.from} timed out`)));
+                .catch(() => ask(Promise.reject(`Ask from ${msg.from} to ${msg.to}  timed out`)));
         } else {
             this.distributor.send(channel, msg);
         }
