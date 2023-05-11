@@ -70,7 +70,6 @@ export class WebsocketDistributor implements Distributor {
 	    } else {
 	        serverUri = `${this.server}/ws`;
 	    }
-	    console.error("URI", serverUri);
 	    this.client = new WebsocketClient(serverUri, this.systemName, (origin, questionId, msg) => {
 	        if (msg.askTimeout) {
 	            msg.ask = <T>(t: T) => this.client.answer(origin, questionId, t);
