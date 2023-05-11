@@ -24,7 +24,7 @@ export class DistributedActorSystem extends ActorSystem {
 	 * Every node needs a unique system name!
 	 * @param options Distribution options (and general actor system options).
 	 */
-	constructor(options: DistributedActorSystemOptions) {
+	constructor(options: DistributedActorSystemOptions, readyCallback: () => Promise<void>) {
 	    super(options);
 	    this.running = false;
 	    this.distributor = options.distributor;
@@ -41,8 +41,7 @@ export class DistributedActorSystem extends ActorSystem {
 	        this.running = true;
 	    }).catch(() => {
 	        this.logger.error("RPC bus connection could not be created");
-	    });
-
+	    }).then(readyCallback);
 	}
 
 	/**
