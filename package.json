@@ -1,6 +1,6 @@
 {
   "name": "ts-actors",
-  "version": "2.3.1",
+  "version": "3.0.0",
   "description": "Akka-style actors for typescript",
   "author": "Hendrik Belitz <hendrik@innovation-through-understanding.de>",
   "main": "lib/index.js",
@@ -11,7 +11,7 @@
   "dependencies": {
     "@types/ws": "^8.5.4",
     "isomorphic-ws": "^5.0.0",
-    "ramda": "^0.27.0",
+    "rambda": "^9.1.0",
     "rxjs": "^6.5.5",
     "uuid": "^8.1.0",
     "ws": "^8.13.0"
@@ -19,7 +19,6 @@
   "devDependencies": {
     "@types/jest": "^25.2.3",
     "@types/node": "^14.0.6",
-    "@types/ramda": "^0.27.6",
     "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",

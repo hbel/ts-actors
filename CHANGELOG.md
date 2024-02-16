@@ -1,3 +1,16 @@
+# 3.0.0
+
+-   Couple of bugfixes for the distributed actor system.
+-   Actor systems are now instantiated asynchronously via factory functions.
+-   Removed ramda in favor of rambda.
+-   Fixed wrong status flag for run status of an actor system that was shut down.
+-   Fixed the error handling for ask timeouts (now a proper rejected promise is returned).
+
+# 2.3.2
+
+-   Fixed an error in WebsocketDistributor that not properly handled an exception on sending messages.
+-   Added a sample that communicates dynamic data (e.g. to a web application)
+
 # 2.3.0
 
 Updates to WebsocketDistributor interface and functionality. You now need to provide a nodejs server object for the proxy. And you can provide an auth middleware for upgrading websocket requests.
