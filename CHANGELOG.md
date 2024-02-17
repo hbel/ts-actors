@@ -1,3 +1,8 @@
+# 3.0.1
+
+-   Fixed an issue with authorized websockets. The error event looks different on the client side
+-   Removed double initialisation in DistributedActorSystem
+
 # 3.0.0
 
 -   Couple of bugfixes for the distributed actor system.

@@ -186,7 +186,7 @@ export class WebsocketClient {
 				}
 			};
 			this.client.onerror = error => {
-				if (error.message.includes("401")) {
+				if (error.message?.includes("401") || error.target?.readyState == 3) {
 					console.error("Websocket authorization failed");
 					clearInterval(this.check);
 					reject(new Error("Websocket authorization failed"));

@@ -33,17 +33,6 @@ export class DistributedActorSystem extends ActorSystem {
 		this.inboxSubscription.unsubscribe();
 		this.inboxSubscription = this.inbox.subscribe(this.remoteSubscription);
 		this.handleInboxMessage = super.handleInboxMessage.bind(this);
-
-		this.distributor
-			.connect()
-			.then(() => this.distributor.subscribe(msg => this.inbox.next(msg)))
-			.then(() => {
-				this.logger.debug("Connection to RPC bus established");
-				this.running = true;
-			})
-			.catch(() => {
-				this.logger.error("RPC bus connection could not be created");
-			});
 	}
 
 	public static override async create(options: DistributedActorSystemOptions): Promise<DistributedActorSystem> {

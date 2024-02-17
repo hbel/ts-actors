@@ -96,11 +96,16 @@ async function run() {
 			server: srv,
 			authenticationMiddleware: (request, next) => {
 				const authHeader = request.headers.authorization;
-				const error = authHeader === "allesokay" ? undefined : new Error("Authorization failed");
+				const cookie = request.headers.cookie;
+				if (cookie?.includes("bearer=secret")) {
+					next(undefined);
+					return;
+				}
+				const error = authHeader === "secret" ? undefined : new Error("Authorization failed");
 				next(error);
 			},
 			headers: {
-				authorization: "allesokay",
+				authorization: "secret",
 			},
 		});
 
