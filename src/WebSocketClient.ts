@@ -110,10 +110,11 @@ export class WebsocketClient {
 		id: string,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		onMessage?: (origin: string, questionId: string, payload: any) => void,
-		headers?: Record<string, string>
+		headers?: Record<string, string>,
+		token?: string
 	): Promise<WebsocketClient> {
 		const client = new WebsocketClient(id, onMessage);
-		return client.init(proxy, headers).then(() => client);
+		return client.init(proxy, headers, token).then(() => client);
 	}
 
 	private handleTimeouts = () => {
@@ -150,9 +151,13 @@ export class WebsocketClient {
 		});
 	};
 
-	private async init(proxy: string, headers: Record<string, string> = {}): Promise<void> {
+	private async init(proxy: string, headers: Record<string, string> | undefined, token?: string): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			this.client = new WebSocket(proxy, { headers });
+			this.client = new WebSocket(
+				proxy,
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				(token ? ["Authorization", token] : headers ? { headers } : undefined) as any
+			);
 			this.client.onopen = () => {
 				console.log("Connection to proxy established");
 				this.trySend(JSON.stringify(new ClientId(this.id)));

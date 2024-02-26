@@ -30,7 +30,9 @@ export class WebsocketMessageProxy {
 		this.init();
 
 		server.on("upgrade", (request: IncomingMessage, socket: Duplex, head: Buffer) => {
-			if (request.url === "/ws") {
+			if (request.url?.includes("/ws")) {
+				console.log(request.headers);
+
 				authenticationMiddleware(request, (err?: Error) => {
 					if (err) {
 						socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");

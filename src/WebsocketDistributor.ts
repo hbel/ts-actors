@@ -33,8 +33,9 @@ export class WebsocketDistributor implements Distributor {
 	 * @param systemName Actor system name
 	 * @param protocol Either ws or wss
 	 * @param server Either a HttpServer object (if you want to use this distributor as a proxy) or a string containing the full server hostname, port, and protocol
+	 * @param token Token to be send with sec-websocket-protocol Authorization
 	 */
-	constructor(private readonly systemName: string, private server: string | ServerInfo) {
+	constructor(private readonly systemName: string, private server: string | ServerInfo, private token?: string) {
 		if (typeof server !== "string") {
 			// In the browser, you cannot create a websocket server, so we import this dynamically
 			import("./WebSocketMessageProxy").then(t => {
@@ -61,7 +62,6 @@ export class WebsocketDistributor implements Distributor {
 	public disconnect(): Promise<void> {
 		this.client?.close();
 		this.proxy?.close();
-		this.proxy === null;
 		return Promise.resolve();
 	}
 
@@ -74,7 +74,8 @@ export class WebsocketDistributor implements Distributor {
 			const { address, port } = this.server.server.address() as AddressInfo;
 			serverUri = `${this.server.secure ? "wss" : "ws"}://${address}:${port}/ws`;
 		} else {
-			serverUri = `${this.server}/ws`;
+			serverUri = this.server.includes("/ws") ? this.server : `${this.server}/ws`;
+			console.error(serverUri);
 		}
 		this.client = await WebsocketClient.createClient(
 			serverUri,
@@ -85,7 +86,8 @@ export class WebsocketDistributor implements Distributor {
 				}
 				callback(msg);
 			},
-			typeof this.server !== "string" ? this.server.headers : {}
+			typeof this.server !== "string" ? this.server.headers : undefined,
+			this.token
 		);
 	}
 
