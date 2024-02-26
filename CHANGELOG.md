@@ -1,3 +1,19 @@
+# 3.1.0
+
+-   Allow ActorRefs to send directly to Actor URI instead of ActorRef instances
+
+# 3.0.4
+
+-   Optionally Sstting sec-websocket-protocol Authorization tokens in WebsocketDistributor is now possible in nodejs and browsers
+
+# 3.0.3
+
+-   Fixed an error in when no headers to Websocket construction
+
+# 3.0.2
+
+-   Made the url settings for client actor systems using a WebsocketDistributor more flexible, e.g. to send query parameters to the server system.
+
 # 3.0.1
 
 -   Fixed an issue with authorized websockets. The error event looks different on the client side
