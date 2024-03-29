@@ -47,7 +47,6 @@ export class WebsocketMessageProxy {
 		});
 	}
 
-	public count = 0;
 	private init() {
 		this.server = new WebSocket.Server({ noServer: true }); // Will be hosted inside a http server with "upgrade"
 		console.log("Websocket MessageProxy ready");
@@ -66,10 +65,6 @@ export class WebsocketMessageProxy {
 			});
 			socket.on("message", <T>(data: WebSocket.RawData) => {
 				const d = JSON.parse(data.toString()) as SockMsg<T>;
-				this.count = this.count + 1;
-				if (this.count == 3) {
-					socket.close();
-				}
 				switch (d.type) {
 					case "client": {
 						console.log("Got new client with id", d.clientId);
