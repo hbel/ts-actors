@@ -1,3 +1,5 @@
+import { serializeError } from "serialize-error";
+
 import type { ActorMessage } from "./ActorMessage";
 import type { ActorSystemOptions } from "./ActorSystem";
 import { ActorSystem } from "./ActorSystem";
@@ -35,12 +37,19 @@ export class DistributedActorSystem extends ActorSystem {
 		this.handleInboxMessage = super.handleInboxMessage.bind(this);
 	}
 
+	private errorHandler = (error: Error): void => {
+		if (this.errorActor) {
+			this.send(this.errorActor.ref, serializeError(error));
+		}
+	};
+
 	public static override async create(options: DistributedActorSystemOptions): Promise<DistributedActorSystem> {
 		const system = new DistributedActorSystem(options);
 		try {
-			await system.distributor.connect();
+			await system.distributor.connect(system.errorHandler);
 			await system.distributor.subscribe(msg => system.inbox.next(msg));
-		} catch {
+		} catch (e) {
+			console.error(e);
 			throw new Error("RPC bus connection could not be created");
 		}
 		system.logger.debug("Connection to RPC bus established");
@@ -71,7 +80,10 @@ export class DistributedActorSystem extends ActorSystem {
 			const ask = msg.ask;
 			this.distributor
 				.ask(channel, msg)
-				.then(result => ask(Promise.resolve(result)))
+				.then(result => {
+					if (result instanceof Error) ask(Promise.resolve(serializeError(result)));
+					else ask(Promise.resolve(result));
+				})
 				.catch(() => ask(Promise.reject(`Ask from ${msg.from} to ${msg.to}  timed out`)));
 		} else {
 			this.distributor

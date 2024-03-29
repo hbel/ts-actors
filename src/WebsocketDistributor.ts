@@ -27,6 +27,7 @@ export class WebsocketDistributor implements Distributor {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private proxy?: any;
 	private client!: WebsocketClient;
+	private errorHandler!: (e: Error) => void;
 
 	/**
 	 *
@@ -47,12 +48,14 @@ export class WebsocketDistributor implements Distributor {
 				);
 			});
 		}
+		this.connect = this.connect.bind(this);
 	}
 
 	/**
 	 * @inheritDoc
 	 */
-	public async connect(): Promise<void> {
+	public async connect(errorHandler: (e: Error) => void): Promise<void> {
+		this.errorHandler = errorHandler;
 		return Promise.resolve();
 	}
 
@@ -73,6 +76,7 @@ export class WebsocketDistributor implements Distributor {
 		if (typeof this.server !== "string") {
 			const { address, port } = this.server.server.address() as AddressInfo;
 			serverUri = `${this.server.secure ? "wss" : "ws"}://${address}:${port}/ws`;
+			this.proxy.errorHandler = this.errorHandler;
 		} else {
 			serverUri = this.server.includes("/ws") ? this.server : `${this.server}/ws`;
 			console.error(serverUri);
@@ -80,6 +84,7 @@ export class WebsocketDistributor implements Distributor {
 		this.client = await WebsocketClient.createClient(
 			serverUri,
 			this.systemName,
+			this.errorHandler,
 			(origin, questionId, msg) => {
 				if (msg.askTimeout) {
 					msg.ask = <T>(t: T) => this.client.answer(origin, questionId, t);

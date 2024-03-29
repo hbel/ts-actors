@@ -3595,10 +3595,10 @@ queue-microtask@^1.2.2:
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
   integrity sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==
 
-rambda@^9.1.0:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/rambda/-/rambda-9.1.0.tgz#43be8c01dcdca37838ae5c1065e58553d2298366"
-  integrity sha512-fCRAq8Of+bAuqjAA0MSb/umbNgiYwy9N5camM2T++Qu/mRImLT3a31hf0REvnqaWCrgrdC3ewf/ucAILsYeBgQ==
+rambda@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/rambda/-/rambda-9.1.1.tgz#100e49b3179aaab999c82c2ca13a6602e2191f69"
+  integrity sha512-8A8umDmXQf4EG4cpoM358HWF49I5K7/6I8M8ciN5jdo0tOiwEL0DJqq9JRzWOHNYGiTD13OQFJbvayeafEp8xw==
 
 react-is@^16.12.0:
   version "16.13.1"
@@ -3818,6 +3818,13 @@ semver@^6.0.0, semver@^6.3.0:
   version "6.3.1"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
   integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
+
+serialize-error@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/serialize-error/-/serialize-error-8.1.0.tgz#3a069970c712f78634942ddd50fbbc0eaebe2f67"
+  integrity sha512-3NnuWfM6vBYoy5gZFvHiYsVbafvI9vZv/+jlIigFn4oP4zjNPK3LhcY0xSCgeb1a5L8jO71Mit9LlNoi2UfDDQ==
+  dependencies:
+    type-fest "^0.20.2"
 
 set-blocking@^2.0.0:
   version "2.0.0"

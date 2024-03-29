@@ -1,44 +1,45 @@
 {
-  "name": "ts-actors",
-  "version": "3.1.0",
-  "description": "Akka-style actors for typescript",
-  "author": "Hendrik Belitz <hendrik@innovation-through-understanding.de>",
-  "main": "lib/index.js",
-  "license": "MIT",
-  "files": [
-    "lib/"
-  ],
-  "dependencies": {
-    "@types/ws": "^8.5.4",
-    "isomorphic-ws": "^5.0.0",
-    "rambda": "^9.1.0",
-    "rxjs": "^6.5.5",
-    "uuid": "^8.1.0",
-    "ws": "^8.13.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^25.2.3",
-    "@types/node": "^14.0.6",
-    "@types/uuid": "^8.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.15.0",
-    "@typescript-eslint/parser": "^5.15.0",
-    "eslint": "^7.30.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
-    "jest": "^26.0.1",
-    "nats": "^2.6.1",
-    "prettier": "^2.6.0",
-    "ts-jest": "^26.1.0",
-    "ts-node": "^10.7.0",
-    "typedoc": "^0.23.23",
-    "typescript": "^4.6.2",
-    "unionize": "^3.1.0",
-    "winston": "^3.2.1"
-  },
-  "scripts": {
-    "build": "eslint . --ext .ts && tsc --build tsconfig.json",
-    "lint-fix": "eslint . --ext .ts --fix",
-    "test": "jest --watch",
-    "doc": "typedoc index.ts ./src/NatsDistributor.ts"
-  }
+	"name": "ts-actors",
+	"version": "3.2.0",
+	"description": "Akka-style actors for typescript",
+	"author": "Hendrik Belitz <hendrik@innovation-through-understanding.de>",
+	"main": "lib/index.js",
+	"license": "MIT",
+	"files": [
+		"lib/"
+	],
+	"dependencies": {
+		"@types/ws": "^8.5.4",
+		"isomorphic-ws": "^5.0.0",
+		"rambda": "^9.1.1",
+		"rxjs": "^6.5.5",
+		"serialize-error": "^8.1.0",
+		"uuid": "^8.1.0",
+		"ws": "^8.13.0"
+	},
+	"devDependencies": {
+		"@types/jest": "^25.2.3",
+		"@types/node": "^14.0.6",
+		"@types/uuid": "^8.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.15.0",
+		"@typescript-eslint/parser": "^5.15.0",
+		"eslint": "^7.30.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-simple-import-sort": "^7.0.0",
+		"jest": "^26.0.1",
+		"nats": "^2.6.1",
+		"prettier": "^2.6.0",
+		"ts-jest": "^26.1.0",
+		"ts-node": "^10.7.0",
+		"typedoc": "^0.23.23",
+		"typescript": "^4.6.2",
+		"unionize": "^3.1.0",
+		"winston": "^3.2.1"
+	},
+	"scripts": {
+		"build": "eslint . --ext .ts && tsc --build tsconfig.json",
+		"lint-fix": "eslint . --ext .ts --fix",
+		"test": "jest --watch",
+		"doc": "typedoc index.ts ./src/NatsDistributor.ts"
+	}
 }

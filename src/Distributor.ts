@@ -7,7 +7,7 @@ export interface Distributor {
 	/**
 	 * Connect to RPC bus
 	 */
-	connect(): Promise<void>;
+	connect(errorHandler: (error: Error) => void): Promise<void>;
 	/**
 	 * Disconnect from RPC bus
 	 */

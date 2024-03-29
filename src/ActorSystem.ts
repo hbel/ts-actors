@@ -1,5 +1,6 @@
 import type { Subscription } from "rxjs";
 import { Subject } from "rxjs";
+import { serializeError } from "serialize-error";
 import { v1 } from "uuid";
 
 import { Actor } from "./Actor";
@@ -46,6 +47,7 @@ const createProxy = <T, U>(actor: Actor<T, U>) => {
 export class ActorSystem {
 	protected actors = new Map<string, AnyActor>(); // All actors orchestrated by the system
 	protected systemActor: Actor<unknown, void>; // Base actor for system
+	protected errorActor?: Actor<unknown, unknown>; // Optional error actor
 
 	public inbox = new Subject<ActorMessage<unknown, unknown>>(); // Message inbox
 
@@ -86,11 +88,15 @@ export class ActorSystem {
 		...params: unknown[]
 	): Promise<ActorRefImpl> {
 		const [...args] = params;
-		const { name, parent, strategy } = options ?? {};
+		const { name, parent, strategy, errorReceiver } = options ?? {};
 		const actorName =
 			(parent ? parent.actor.name + "/" : `actors://${this.systemName}/`) + (name || actorType.name + "_" + v1());
 		if (this.actors.has(actorName) && !options.overwriteExisting) {
-			throw new Error("Actor with that name already exists");
+			const error = new Error("Actor with that name already exists");
+			if (this.errorActor) {
+				this.send(this.errorActor.ref, serializeError(error));
+			}
+			return Promise.reject(error);
 		}
 		const newActor: Actor<X, Y> = new actorType(actorName, this, ...args) as unknown as Actor<X, Y>;
 		newActor.options = options;
@@ -106,6 +112,9 @@ export class ActorSystem {
 		if (strategy) {
 			newActor.strategy = strategy;
 		}
+		if (errorReceiver) {
+			this.errorActor = newActor;
+		}
 		await newActor.afterStart();
 		return newActor.ref;
 	}
@@ -119,7 +128,16 @@ export class ActorSystem {
 		if (name === `actors://${this.systemName}`) {
 			return this.systemActor.ref;
 		}
-		return this.actors.get(name)?.ref ?? new Error("Actor not found");
+		const ref = this.actors.get(name)?.ref;
+		if (ref) {
+			return ref;
+		} else {
+			const error = new Error(`Actor not found ${name}`);
+			if (this.errorActor) {
+				this.send(this.errorActor.ref, serializeError(error));
+			}
+			return error;
+		}
 	}
 
 	/**
@@ -235,7 +253,13 @@ export class ActorSystem {
 							`Ask from ${msg.from} to ${msg.to} timed out at ${new Date().toLocaleString()}`
 						);
 					timedOut = true;
-					ask(new Error(`Ask from ${msg.from} to ${msg.to} timed out at ${new Date().toLocaleString()}`));
+					const error = new Error(
+						`Ask from ${msg.from} to ${msg.to} timed out at ${new Date().toLocaleString()}`
+					);
+					ask(error);
+					if (this.errorActor) {
+						this.send(this.errorActor.ref, serializeError(error));
+					}
 				}, msg.askTimeout);
 			}
 			// This is a fix for the fact that distributed actors need to set the name to the original caller, not the local one
@@ -256,6 +280,9 @@ export class ActorSystem {
 			}
 		} catch (e) {
 			const target = this.actors.get(msg.to);
+			if (this.errorActor) {
+				this.send(this.errorActor.ref, serializeError(e));
+			}
 			if (target) {
 				this.logger.warn(`Unhandled exception in ${target.name}, applying strategy ${target.strategy}`);
 				switch (target.strategy) {

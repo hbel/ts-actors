@@ -1,3 +1,8 @@
+# 3.1.2
+
+-   Systems can now take an error actor for application-specific handling of non-critical errors
+-   WebSocketClient will now try to reestablish the connection when it broke down
+
 # 3.1.0
 
 -   Allow ActorRefs to send directly to Actor URI instead of ActorRef instances

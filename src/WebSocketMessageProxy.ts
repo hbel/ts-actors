@@ -11,6 +11,7 @@ import type { SockMsg } from "./WebSocketClient";
 export class WebsocketMessageProxy {
 	private server!: WebSocket.Server;
 	private sockets = new Map<string, WebSocket.WebSocket>();
+	public errorHandler!: (e: Error) => void;
 
 	/**
 	 * @param host Host to use
@@ -31,8 +32,6 @@ export class WebsocketMessageProxy {
 
 		server.on("upgrade", (request: IncomingMessage, socket: Duplex, head: Buffer) => {
 			if (request.url?.includes("/ws")) {
-				console.log(request.headers);
-
 				authenticationMiddleware(request, (err?: Error) => {
 					if (err) {
 						socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
@@ -48,6 +47,7 @@ export class WebsocketMessageProxy {
 		});
 	}
 
+	public count = 0;
 	private init() {
 		this.server = new WebSocket.Server({ noServer: true }); // Will be hosted inside a http server with "upgrade"
 		console.log("Websocket MessageProxy ready");
@@ -62,9 +62,14 @@ export class WebsocketMessageProxy {
 				const socketToClose = Array.from(this.sockets.entries()).find(s => s[1] !== socket);
 				this.sockets.delete(socketToClose?.[0] ?? "");
 				console.error(socketToClose?.[0] ?? "", err);
+				this.errorHandler(err);
 			});
 			socket.on("message", <T>(data: WebSocket.RawData) => {
 				const d = JSON.parse(data.toString()) as SockMsg<T>;
+				this.count = this.count + 1;
+				if (this.count == 3) {
+					socket.close();
+				}
 				switch (d.type) {
 					case "client": {
 						console.log("Got new client with id", d.clientId);
@@ -76,6 +81,7 @@ export class WebsocketMessageProxy {
 						const target = this.sockets.get(d.targetId);
 						if (!target) {
 							console.error("Unknown target", d.targetId);
+							this.errorHandler(new Error(`Unknown target ${d.targetId}`));
 						}
 						target?.send(data.toString());
 						break;
@@ -85,6 +91,7 @@ export class WebsocketMessageProxy {
 		});
 		this.server.on("error", err => {
 			console.error("Connection broke down, reinitialising. Error: ", err);
+			this.errorHandler(err);
 			this.init();
 		});
 	}

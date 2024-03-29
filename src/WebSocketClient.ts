@@ -2,6 +2,19 @@ import type { MessageEvent } from "isomorphic-ws";
 import WebSocket from "isomorphic-ws";
 import { v4 } from "uuid";
 
+export class DeliveryError extends Error {
+	public readonly info: { from: string; to: string; message: unknown };
+	constructor(msg: string, payload: any) {
+		super(msg);
+		const { from, to, message } = payload;
+		if (from) {
+			this.info = { from, to, message };
+		} else {
+			this.info = { from: "", to: "", message: payload };
+		}
+	}
+}
+
 /**
  * Socket message base interface
  */
@@ -86,9 +99,11 @@ export class WebsocketClient {
 	private acks = new Map<string, [number, Function, Function]>(); // All outstanding acknowledgements we are waiting for.
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	private questions = new Map<string, [number, Function, Function]>(); // All open questions we still need answers for.
+	private pending = new Map<string, unknown>(); // All pending messages
 
 	private client!: WebSocket;
 	private check!: NodeJS.Timeout;
+	private errorHandler!: (e: Error) => void;
 
 	/**
 	 *
@@ -108,12 +123,14 @@ export class WebsocketClient {
 	public static async createClient(
 		proxy: string,
 		id: string,
+		errorHandler: (e: Error) => void,
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		onMessage?: (origin: string, questionId: string, payload: any) => void,
 		headers?: Record<string, string>,
 		token?: string
 	): Promise<WebsocketClient> {
 		const client = new WebsocketClient(id, onMessage);
+		client.errorHandler = errorHandler;
 		return client.init(proxy, headers, token).then(() => client);
 	}
 
@@ -130,8 +147,14 @@ export class WebsocketClient {
 			const ack = this.acks.get(acknowledgeMessage);
 			if (ack) {
 				const [, , reject] = ack;
-				reject(new Error(`ACK for message ${acknowledgeMessage} is missing`));
+				const error = new DeliveryError(
+					`ACK for message ${acknowledgeMessage} is missing`,
+					this.pending.get(acknowledgeMessage)!
+				);
+				this.errorHandler(error);
+				reject(error);
 				this.acks.delete(acknowledgeMessage);
+				this.pending.delete(acknowledgeMessage);
 			}
 		});
 		const rejectQuestions = Array.from(this.questions.entries()).reduce((p, c) => {
@@ -145,8 +168,11 @@ export class WebsocketClient {
 			const question = this.questions.get(answer);
 			if (question) {
 				const [, , reject] = question;
-				reject(new Error(`Answer for message ${answer} is missing`));
+				const error = new DeliveryError(`Answer for message ${answer} is missing`, this.pending.get(answer)!);
+				this.errorHandler(error);
+				reject(error);
 				this.questions.delete(answer);
+				this.pending.delete(answer);
 			}
 		});
 	};
@@ -176,6 +202,7 @@ export class WebsocketClient {
 						const [, resolveAck] = this.acks.get(d.id) ?? [0, () => {}, () => {}];
 						resolveAck?.();
 						this.acks.delete(d.id);
+						this.pending.delete(d.id);
 						break;
 					}
 					case "answer": {
@@ -183,6 +210,7 @@ export class WebsocketClient {
 						const [, resolveAnswer] = this.questions.get(d.questionId) ?? [0, () => {}, () => {}];
 						resolveAnswer?.(d.payload);
 						this.questions.delete(d.questionId);
+						this.pending.delete(d.id);
 						this.trySend(JSON.stringify(new Ack(d.id, this.id, d.originId)));
 						break;
 					}
@@ -190,15 +218,23 @@ export class WebsocketClient {
 						console.error("Received unknown message over websocket, ignoring it");
 				}
 			};
+			this.client.onclose = socket => {
+				const error = `Socket to proxy was closed with code ${socket.code}. Trying to reestablish it.`;
+				this.errorHandler(new Error(error));
+				setTimeout(() => this.init(proxy, headers, token), 500);
+			};
 			this.client.onerror = error => {
 				if (error.message?.includes("401") || error.target?.readyState == 3) {
 					console.error("Websocket authorization failed");
 					clearInterval(this.check);
-					reject(new Error("Websocket authorization failed"));
+					const error = new Error("Websocket authorization failed");
+					this.errorHandler(error);
+					reject(error);
 					return;
 				}
 				console.error("Error on websocket. Reconnecting.");
-				setTimeout(() => this.init, 2000);
+				this.errorHandler(new Error(error.message));
+				setTimeout(() => this.init(proxy, headers, token), 2000);
 			};
 		});
 	}
@@ -218,6 +254,7 @@ export class WebsocketClient {
 			const id = v4();
 			const m = new Message(id, this.id, targetId, msg);
 			this.acks.set(id, [this.ts() + timeout, resolve, reject]);
+			this.pending.set(id, msg);
 			this.trySend(JSON.stringify(m));
 		});
 	}
@@ -228,6 +265,7 @@ export class WebsocketClient {
 			const id = v4();
 			const m = new Answer(id, this.id, targetId, questionId, msg);
 			this.acks.set(id, [this.ts() + timeout, resolve, reject]);
+			this.pending.set(id, msg);
 			this.trySend(JSON.stringify(m));
 		});
 	}
@@ -238,6 +276,8 @@ export class WebsocketClient {
 			const id = v4();
 			const m = new Message(id, this.id, targetId, msg);
 			this.questions.set(id, [this.ts() + timeout, resolve, reject]);
+			this.pending.set(id, msg);
+
 			this.trySend(JSON.stringify(m));
 		});
 	}
