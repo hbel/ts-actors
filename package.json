@@ -1,6 +1,6 @@
 {
 	"name": "ts-actors",
-	"version": "3.2.1",
+	"version": "3.2.2",
 	"description": "Akka-style actors for typescript",
 	"author": "Hendrik Belitz <hendrik@innovation-through-understanding.de>",
 	"main": "lib/index.js",

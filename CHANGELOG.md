@@ -1,4 +1,8 @@
-# 3.1.2
+# 3.2.2
+
+-   Added internal keep-alive messages to the websocket infrastructure
+
+# 3.2.0
 
 -   Systems can now take an error actor for application-specific handling of non-critical errors
 -   WebSocketClient will now try to reestablish the connection when it broke down

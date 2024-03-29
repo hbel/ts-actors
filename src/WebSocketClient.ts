@@ -6,9 +6,8 @@ export class DeliveryError extends Error {
 	public readonly info: { from: string; to: string; message: unknown };
 	constructor(msg: string, payload: any) {
 		super(msg);
-		const { from, to, message } = payload;
-		if (from) {
-			this.info = { from, to, message };
+		if (payload.from) {
+			this.info = { from: payload.from, to: payload.to, message: payload.message };
 		} else {
 			this.info = { from: "", to: "", message: payload };
 		}
@@ -103,6 +102,7 @@ export class WebsocketClient {
 
 	private client!: WebSocket;
 	private check!: NodeJS.Timeout;
+	private keepAlive!: NodeJS.Timeout;
 	private errorHandler!: (e: Error) => void;
 
 	/**
@@ -146,13 +146,11 @@ export class WebsocketClient {
 		rejectAcks.forEach(acknowledgeMessage => {
 			const ack = this.acks.get(acknowledgeMessage);
 			if (ack) {
-				const [, , reject] = ack;
 				const error = new DeliveryError(
 					`ACK for message ${acknowledgeMessage} is missing`,
 					this.pending.get(acknowledgeMessage)!
 				);
 				this.errorHandler(error);
-				reject(error);
 				this.acks.delete(acknowledgeMessage);
 				this.pending.delete(acknowledgeMessage);
 			}
@@ -170,9 +168,9 @@ export class WebsocketClient {
 				const [, , reject] = question;
 				const error = new DeliveryError(`Answer for message ${answer} is missing`, this.pending.get(answer)!);
 				this.errorHandler(error);
-				reject(error);
 				this.questions.delete(answer);
 				this.pending.delete(answer);
+				reject(error);
 			}
 		});
 	};
@@ -187,9 +185,15 @@ export class WebsocketClient {
 			this.client.onopen = () => {
 				console.log("Connection to proxy established");
 				this.trySend(JSON.stringify(new ClientId(this.id)));
+				clearInterval(this.keepAlive);
+				this.keepAlive = setInterval(() => this.trySend("KA"), 30000);
 				resolve();
 			};
-			this.client.onmessage = <T>(data: MessageEvent) => {
+			this.client.onmessage = <T>(data: MessageEvent | { data: "KA" }) => {
+				if (data.data === "KA") {
+					// This is just a keep-alive message for the websocket. Ignore it for now.
+					return;
+				}
 				const d = JSON.parse(data.data.toString()) as SockMsg<T>;
 				switch (d.type) {
 					case "msg": {
@@ -221,6 +225,7 @@ export class WebsocketClient {
 			this.client.onclose = socket => {
 				const error = `Socket to proxy was closed with code ${socket.code}. Trying to reestablish it.`;
 				this.errorHandler(new Error(error));
+				clearInterval(this.keepAlive);
 				setTimeout(() => this.init(proxy, headers, token), 500);
 			};
 			this.client.onerror = error => {
@@ -234,6 +239,7 @@ export class WebsocketClient {
 				}
 				console.error("Error on websocket. Reconnecting.");
 				this.errorHandler(new Error(error.message));
+				clearInterval(this.keepAlive);
 				setTimeout(() => this.init(proxy, headers, token), 2000);
 			};
 		});

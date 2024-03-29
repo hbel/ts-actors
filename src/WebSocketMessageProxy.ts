@@ -64,6 +64,11 @@ export class WebsocketMessageProxy {
 				this.errorHandler(err);
 			});
 			socket.on("message", <T>(data: WebSocket.RawData) => {
+				if (data.toString() === "KA") {
+					// Just a keepalive
+					socket.send("KA");
+					return;
+				}
 				const d = JSON.parse(data.toString()) as SockMsg<T>;
 				switch (d.type) {
 					case "client": {

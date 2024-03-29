@@ -57,7 +57,7 @@ class Pong extends Actor<string, void> {
 					return;
 				}
 
-				this.send(from.name, "PING");
+				setTimeout(() => this.send(from.name, "PING"), 500);
 				break;
 			}
 			case "SHUTDOWN": {
