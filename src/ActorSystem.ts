@@ -9,6 +9,7 @@ import type { ActorOptions } from "./ActorOptions";
 import type { ActorRef } from "./ActorRef";
 import type { ActorRefImpl } from "./ActorRefImpl";
 import { ConsoleLogger } from "./ConsoleLogger";
+import { ActorExistsError, ActorNotFoundError } from "./Errors";
 import type { Logger } from "./Logger";
 
 /** Actor constructor type */
@@ -92,7 +93,7 @@ export class ActorSystem {
 		const actorName =
 			(parent ? parent.actor.name + "/" : `actors://${this.systemName}/`) + (name || actorType.name + "_" + v1());
 		if (this.actors.has(actorName) && !options.overwriteExisting) {
-			const error = new Error("Actor with that name already exists");
+			const error = new ActorExistsError(actorName);
 			if (this.errorActor) {
 				this.send(this.errorActor.ref, serializeError(error));
 			}
@@ -132,7 +133,7 @@ export class ActorSystem {
 		if (ref) {
 			return ref;
 		} else {
-			const error = new Error(`Actor not found ${name}`);
+			const error = new ActorNotFoundError(name);
 			if (this.errorActor) {
 				this.send(this.errorActor.ref, serializeError(error));
 			}

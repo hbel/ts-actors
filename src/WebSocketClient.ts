@@ -2,17 +2,7 @@ import type { MessageEvent } from "isomorphic-ws";
 import WebSocket from "isomorphic-ws";
 import { v4 } from "uuid";
 
-export class DeliveryError extends Error {
-	public readonly info: { from: string; to: string; message: unknown };
-	constructor(msg: string, payload: any) {
-		super(msg);
-		if (payload.from) {
-			this.info = { from: payload.from, to: payload.to, message: payload.message };
-		} else {
-			this.info = { from: "", to: "", message: payload };
-		}
-	}
-}
+import { AuthorizationError, DeliveryError, SocketClosedError } from "./Errors";
 
 /**
  * Socket message base interface
@@ -223,8 +213,13 @@ export class WebsocketClient {
 				}
 			};
 			this.client.onclose = socket => {
-				const error = `Socket to proxy was closed with code ${socket.code}. Trying to reestablish it.`;
-				this.errorHandler(new Error(error));
+				const error = new SocketClosedError(
+					`Socket to proxy was closed with code ${socket.code}. Trying to reestablish it.`,
+					this.id,
+					socket.code
+				);
+				console.warn(error);
+				this.errorHandler(error);
 				clearInterval(this.keepAlive);
 				setTimeout(() => this.init(proxy, headers, token), 500);
 			};
@@ -232,7 +227,7 @@ export class WebsocketClient {
 				if (error.message?.includes("401") || error.target?.readyState == 3) {
 					console.error("Websocket authorization failed");
 					clearInterval(this.check);
-					const error = new Error("Websocket authorization failed");
+					const error = new AuthorizationError();
 					this.errorHandler(error);
 					reject(error);
 					return;

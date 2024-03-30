@@ -3,7 +3,8 @@ import type { Server as HttpsServer } from "https";
 import type { Duplex } from "stream";
 import WebSocket from "ws";
 
-import type { SockMsg } from "./WebSocketClient";
+import { SocketClosedError, UnknownTargetError } from "./Errors";
+import { type SockMsg } from "./WebSocketClient";
 
 /**
  * Websocket server to proxy messages between different clients
@@ -54,13 +55,25 @@ export class WebsocketMessageProxy {
 			console.log("Got new connection");
 			socket.on("close", (code, reason) => {
 				const socketToClose = Array.from(this.sockets.entries()).find(s => s[1] === socket);
-				this.sockets.delete(socketToClose?.[0] ?? "");
-				console.log("Socket closed", socketToClose?.[0] ?? "", code, reason.toString("utf-8"));
+				if (!socketToClose) {
+					return;
+				}
+				this.sockets.delete(socketToClose[0]);
+				console.warn("Socket closed", socketToClose[0], code, reason.toString("utf-8"));
+				const error = new SocketClosedError(
+					`Socket closed ${reason.toString("utf-8")}`,
+					socketToClose[0],
+					code
+				);
+				this.errorHandler(error);
 			});
 			socket.on("error", err => {
 				const socketToClose = Array.from(this.sockets.entries()).find(s => s[1] !== socket);
-				this.sockets.delete(socketToClose?.[0] ?? "");
-				console.error(socketToClose?.[0] ?? "", err);
+				if (!socketToClose) {
+					return;
+				}
+				this.sockets.delete(socketToClose[0]);
+				console.error(socketToClose[0], err);
 				this.errorHandler(err);
 			});
 			socket.on("message", <T>(data: WebSocket.RawData) => {
@@ -81,7 +94,7 @@ export class WebsocketMessageProxy {
 						const target = this.sockets.get(d.targetId);
 						if (!target) {
 							console.error("Unknown target", d.targetId);
-							this.errorHandler(new Error(`Unknown target ${d.targetId}`));
+							this.errorHandler(new UnknownTargetError(d.targetId));
 						}
 						target?.send(data.toString());
 						break;

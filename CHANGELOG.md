@@ -1,3 +1,7 @@
+# 3.3.0
+
+-   Added specific error classes
+
 # 3.2.2
 
 -   Added internal keep-alive messages to the websocket infrastructure

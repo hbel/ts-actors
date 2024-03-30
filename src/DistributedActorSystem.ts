@@ -38,7 +38,7 @@ export class DistributedActorSystem extends ActorSystem {
 	}
 
 	private errorHandler = (error: Error): void => {
-		if (this.errorActor) {
+		if (this.errorActor && !this.errorActor.shutdown) {
 			this.send(this.errorActor.ref, serializeError(error));
 		}
 	};
