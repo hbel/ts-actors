@@ -6,3 +6,4 @@ export { Distributor } from "./src/Distributor";
 export { DistributedActorSystem, DistributedActorSystemOptions } from "./src/DistributedActorSystem";
 export type { ActorMessage } from "./src/ActorMessage";
 export { SupervisionStrategy } from "./src/SupervisionStrategy";
+export * from "./src/Errors";
