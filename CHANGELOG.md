@@ -1,3 +1,7 @@
+# 3.4.0
+
+-   Fixed error serialization for distributed actor systems, clean shutdown of websockets, properly deserialize messages to system actor
+
 # 3.3.0
 
 -   Added specific error classes

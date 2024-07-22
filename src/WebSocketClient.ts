@@ -3,6 +3,7 @@ import WebSocket from "isomorphic-ws";
 import { v4 } from "uuid";
 
 import { AuthorizationError, DeliveryError, SocketClosedError } from "./Errors";
+import { serializeError } from "serialize-error";
 
 /**
  * Socket message base interface
@@ -94,6 +95,8 @@ export class WebsocketClient {
 	private check!: NodeJS.Timeout;
 	private keepAlive!: NodeJS.Timeout;
 	private errorHandler!: (e: Error) => void;
+
+	private shutdown = false;
 
 	/**
 	 *
@@ -213,6 +216,10 @@ export class WebsocketClient {
 				}
 			};
 			this.client.onclose = socket => {
+				if (this.shutdown) {
+					clearInterval(this.keepAlive);
+					return;
+				}
 				const error = new SocketClosedError(
 					`Socket to proxy was closed with code ${socket.code}. Trying to reestablish it.`,
 					this.id,
@@ -242,6 +249,7 @@ export class WebsocketClient {
 
 	public close() {
 		clearInterval(this.check);
+		this.shutdown = true;
 		this.client.close();
 	}
 
@@ -264,6 +272,9 @@ export class WebsocketClient {
 	public answer<T>(targetId: string, questionId: string, msg: T, timeout = 5000): Promise<void> {
 		return new Promise((resolve, reject) => {
 			const id = v4();
+			if (msg instanceof Error) {
+				msg = serializeError(msg) as any;
+			}
 			const m = new Answer(id, this.id, targetId, questionId, msg);
 			this.acks.set(id, [this.ts() + timeout, resolve, reject]);
 			this.pending.set(id, msg);

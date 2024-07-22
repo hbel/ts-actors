@@ -313,6 +313,6 @@ class SystemActor extends Actor<unknown, void> {
 	}
 
 	public async receive(from: ActorRef, message: unknown) {
-		this.logger.info(`System (from ${from.name}): ${message}`);
+		this.logger.info(`System (from ${from.name}): ${JSON.stringify(message)}`);
 	}
 }

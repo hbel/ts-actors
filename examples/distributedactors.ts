@@ -4,17 +4,23 @@ import { Actor } from "../src/Actor";
 import type { ActorRef } from "../src/ActorRef";
 import type { ActorSystem } from "../src/ActorSystem";
 import { DistributedActorSystem } from "../src/DistributedActorSystem";
-// import { NatsDistributor } from "../src/NatsDistributor";
 import { WebsocketDistributor } from "../src/WebsocketDistributor";
 
-class Ping extends Actor<string, void | string> {
+class CustomError extends Error {
+	constructor(message: string, public readonly kabang: number) {
+		super(message);
+	}
+}
+
+class Ping extends Actor<string, void | string | Error> {
 	private counter = 0;
 
 	constructor(name: string, system: ActorSystem) {
 		super(name, system);
 	}
 
-	async receive(from: ActorRef, message: string): Promise<void | string> {
+	async receive(from: ActorRef, message: string): Promise<void | string | Error> {
+		console.log("PING msg", message);
 		switch (message) {
 			case "PING": {
 				console.log("PING", this.counter);
@@ -28,6 +34,9 @@ class Ping extends Actor<string, void | string> {
 			}
 			case "ASK": {
 				return "An answer";
+			}
+			case "ERROR": {
+				return new CustomError("Error message", 7);
 			}
 		}
 	}
@@ -51,9 +60,9 @@ class Pong extends Actor<string, void> {
 			case "PONG": {
 				console.log("PONG", this.counter);
 				this.counter += 1;
-				if (this.counter > 10) {
-					this.send(from.name, "SHUTDOWN");
+				if (this.counter > 2) {
 					setTimeout(() => this.send("actors://SB/PONG", "SHUTDOWN"), 250);
+
 					return;
 				}
 
@@ -61,7 +70,10 @@ class Pong extends Actor<string, void> {
 				break;
 			}
 			case "SHUTDOWN": {
-				this.system.shutdown();
+				const err = await this.ask<string, CustomError>("actors://SA/PING", "ERROR");
+				console.error(err.message, err.kabang);
+				this.send("actors://SA/PING", "SHUTDOWN");
+				setTimeout(() => this.system.shutdown(), 250);
 			}
 		}
 	}

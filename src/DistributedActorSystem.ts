@@ -1,4 +1,4 @@
-import { serializeError } from "serialize-error";
+import { deserializeError, serializeError } from "serialize-error";
 
 import type { ActorMessage } from "./ActorMessage";
 import type { ActorSystemOptions } from "./ActorSystem";
@@ -75,14 +75,17 @@ export class DistributedActorSystem extends ActorSystem {
 
 		// Otherwise, generate channel name from actor name and send message to the remote actor system
 		const channel = actorName.replace("actors://", "").replaceAll("/", ".");
-
 		if (msg.ask) {
 			const ask = msg.ask;
 			this.distributor
 				.ask(channel, msg)
 				.then(result => {
-					if (result instanceof Error) ask(Promise.resolve(serializeError(result)));
-					else ask(Promise.resolve(result));
+					const error = deserializeError(result);
+					if (error.name !== "NonError") {
+						ask(Promise.resolve(error));
+					} else {
+						ask(Promise.resolve(result));
+					}
 				})
 				.catch(() => ask(Promise.reject(`Ask from ${msg.from} to ${msg.to}  timed out`)));
 		} else {
